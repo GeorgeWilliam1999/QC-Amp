@@ -1,0 +1,4 @@
+diagram_id,label,n_nodes,n_edges,n_quark_edges,n_gluon_edges
+D1,quark_emission_absorption,4,3,2,1
+D2,double_gluon_exchange,6,5,3,2
+D3,gluon_loop_on_quark,4,5,3,2
