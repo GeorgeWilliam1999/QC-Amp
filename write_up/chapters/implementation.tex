@@ -1,0 +1,502 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapter 4: Implementation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Software Architecture}
+\label{sec:impl_architecture}
+
+\subsection{Overview}
+\label{subsec:impl_overview}
+
+The \texttt{QC-Amp} library is a Python package implementing the Chawdhry--Pellen algorithm for computing QCD colour factors. It is built on top of IBM's Qiskit framework~\cite{Qiskit2024} and provides a clean, well-documented API for constructing and evaluating colour factor circuits.
+
+The package follows a modular design with clear separation of concerns:
+
+\begin{itemize}
+    \item \texttt{su3.py}: SU(3) group theory utilities (Gell-Mann matrices, structure constants)
+    \item \texttt{gates.py}: Quantum gate definitions ($A$, $B$, $\Lambda$, $M$, $Q$, $G$)
+    \item \texttt{circuits.py}: High-level circuit builders for specific diagrams
+    \item \texttt{colour\_factors.py}: Colour factor computation and verification
+\end{itemize}
+
+\subsection{Directory Structure}
+\label{subsec:directory_structure}
+
+\begin{lstlisting}[language=bash,caption={Package directory structure},label={lst:directory}]
+QC-Amp/
++-- src/
+|   +-- qc_amp/
+|       +-- __init__.py
+|       +-- su3.py           # SU(3) utilities
+|       +-- gates.py         # Gate definitions
+|       +-- circuits.py      # Circuit builders
+|       +-- colour_factors.py # Colour factor computation
++-- tests/
+|   +-- test_su3.py
+|   +-- test_gates.py
+|   +-- test_circuits.py
+|   +-- test_colour_factors.py
++-- examples/
+|   +-- colour_factors_demo.ipynb
++-- pyproject.toml
++-- README.md
+\end{lstlisting}
+
+\subsection{Dependencies}
+\label{subsec:dependencies}
+
+The package requires the following dependencies:
+\begin{itemize}
+    \item Python $\geq 3.9$
+    \item NumPy $\geq 1.21$
+    \item Qiskit $\geq 1.0$
+\end{itemize}
+
+Installation is performed via pip:
+\begin{lstlisting}[language=bash]
+pip install -e .
+\end{lstlisting}
+
+
+\section{Module: \texttt{su3.py}}
+\label{sec:impl_su3}
+
+\subsection{Purpose}
+\label{subsec:su3_purpose}
+
+The \texttt{su3.py} module provides the mathematical foundations for SU(3) colour calculations. It defines the Gell-Mann matrices, unitary-adjusted matrices, and structure constants.
+
+\subsection{Gell-Mann Matrices}
+\label{subsec:impl_gellmann}
+
+The eight Gell-Mann matrices are defined as NumPy arrays:
+
+\begin{lstlisting}[language=Python,caption={Gell-Mann matrix definitions (excerpt)},label={lst:gellmann}]
+import numpy as np
+
+L1 = np.array([
+    [0, 1, 0],
+    [1, 0, 0],
+    [0, 0, 0]
+], dtype=complex)
+
+# ... (L2 through L7 similarly)
+
+L8 = (1 / np.sqrt(3)) * np.array([
+    [1, 0, 0],
+    [0, 1, 0],
+    [0, 0, -2]
+], dtype=complex)
+
+GELL_MANN_MATRICES = [L1, L2, L3, L4, L5, L6, L7, L8]
+\end{lstlisting}
+
+\subsection{Unitary-Adjusted Matrices}
+\label{subsec:impl_adjusted}
+
+The unitary-adjusted matrices $\lhat{a}$ are constructed following the procedure described in Section~\ref{sec:algo_unitary_adjusted}:
+
+\begin{lstlisting}[language=Python,caption={Unitary-adjusted matrix definitions (excerpt)},label={lst:adjusted}]
+# Example: l1 is lambda_1 with (3,3) element set to 1
+l1 = np.array([
+    [0, 1, 0],
+    [1, 0, 0],
+    [0, 0, 1]  # Changed from 0 to 1 for unitarity
+], dtype=complex)
+
+# Special case: l8 is the identity
+l8 = np.array([
+    [1, 0, 0],
+    [0, 1, 0],
+    [0, 0, 1]
+], dtype=complex)
+
+UNITARY_ADJUSTED_MATRICES = [l1, l2, l3, l4, l5, l6, l7, l8]
+\end{lstlisting}
+
+\subsection{Matrix Expansion}
+\label{subsec:impl_expand}
+
+Since quark colours are encoded in 2 qubits (4-dimensional Hilbert space), the $3 \times 3$ matrices must be embedded into $4 \times 4$ matrices:
+
+\begin{lstlisting}[language=Python,caption={Matrix expansion function},label={lst:expand}]
+def expand_matrix(mat: np.ndarray) -> np.ndarray:
+    """
+    Embed a 3x3 matrix into 4x4 by adding an unused |11> level.
+    
+    The |11> state is left invariant (acts as identity on this level).
+    """
+    N = mat.shape[0]  # should be 3
+    expanded = np.zeros((N + 1, N + 1), dtype=complex)
+    expanded[:N, :N] = mat
+    expanded[N, N] = 1  # Identity on |11>
+    return expanded
+\end{lstlisting}
+
+\subsection{Structure Constants}
+\label{subsec:impl_structure}
+
+The SU(3) structure constants $\structconst{a}{b}{c}$ are computed from the commutation relations:
+
+\begin{lstlisting}[language=Python,caption={Structure constant computation},label={lst:structure}]
+def su3_structure_constants():
+    """Compute the SU(3) structure constants f_abc."""
+    Ts = [0.5 * L for L in GELL_MANN_MATRICES]  # T_a = lambda_a / 2
+    
+    f = {}
+    for a in range(8):
+        for b in range(8):
+            comm = Ts[a] @ Ts[b] - Ts[b] @ Ts[a]  # [T_a, T_b]
+            for c in range(8):
+                # f_abc = -2i * Tr([T_a, T_b] * T_c)
+                val = (-2j) * np.trace(comm @ Ts[c])
+                if abs(val) > 1e-10:
+                    f[(a+1, b+1, c+1)] = val
+    return f
+\end{lstlisting}
+
+
+\section{Module: \texttt{gates.py}}
+\label{sec:impl_gates}
+
+\subsection{The R Gate}
+\label{subsec:impl_r_gate}
+
+The $R$ gate prepares the quark colour superposition state:
+
+\begin{lstlisting}[language=Python,caption={R gate definition},label={lst:r_gate}]
+R_MATRIX = np.array([
+    [np.sqrt(1/3),  np.sqrt(1/2), -np.sqrt(1/6), 0],
+    [np.sqrt(1/3), -np.sqrt(1/2), -np.sqrt(1/6), 0],
+    [np.sqrt(1/3),  0,             np.sqrt(2/3), 0],
+    [0,             0,             0,            1],
+], dtype=complex)
+
+R_GATE = UnitaryGate(R_MATRIX, label="R")
+\end{lstlisting}
+
+\subsection{The A Gate}
+\label{subsec:impl_a_gate}
+
+The increment operator is implemented using a cascade of multi-controlled X gates:
+
+\begin{lstlisting}[language=Python,caption={A gate implementation},label={lst:a_gate}]
+def A_gate(register: QuantumRegister) -> QuantumCircuit:
+    """Increment operator A on the unitarisation register."""
+    n = len(register)
+    qc = QuantumCircuit(register, name="A")
+    
+    # Multi-controlled X gates for ripple-carry increment
+    for i in range(n - 1):
+        controls = [register[j] for j in range(n - i - 1)]
+        target = register[n - i - 1]
+        qc.mcx(controls, target)
+    
+    qc.x(register[0])  # LSB always flips
+    return qc
+\end{lstlisting}
+
+\subsection{The B Gate}
+\label{subsec:impl_b_gate}
+
+The amplitude transfer gate consists of the single-qubit $B_1$ rotation and its controlled version:
+
+\begin{lstlisting}[language=Python,caption={B gate implementation},label={lst:b_gate}]
+def B1_gate(alpha: complex) -> UnitaryGate:
+    """Single-qubit B1(alpha) rotation gate."""
+    a = complex(alpha)
+    if abs(a)**2 > 1 + 1e-12:
+        raise ValueError(f"|alpha|^2 must be <= 1")
+    
+    s = np.sqrt(1 - abs(a)**2)
+    mat = np.array([
+        [s, a],
+        [-np.conj(a), s]
+    ], dtype=complex)
+    
+    return UnitaryGate(mat, label=f"B1({alpha:.3f})")
+
+
+def B_gate(alpha: complex, U: QuantumRegister) -> QuantumCircuit:
+    """B(alpha) gate controlled on U[1:] being |0...0>."""
+    NU = len(U)
+    qc = QuantumCircuit(U, name=f"B({alpha:.3f})")
+    
+    if NU == 1:
+        qc.append(B1_gate(alpha), [U[0]])
+        return qc
+    
+    base = B1_gate(alpha)
+    ctrl_state = "0" * (NU - 1)
+    controlled = base.control(num_ctrl_qubits=NU-1, ctrl_state=ctrl_state)
+    qc.append(controlled, list(U[1:]) + [U[0]])
+    
+    return qc
+\end{lstlisting}
+
+\subsection{The \texorpdfstring{$\mu$}{μ} Coefficient}
+\label{subsec:impl_mu}
+
+The correction coefficient function encodes the logic described in Section~\ref{sec:algo_mu}:
+
+\begin{lstlisting}[language=Python,caption={$\mu$ coefficient computation},label={lst:mu}]
+def mu_coefficient(a: int, i: int) -> complex:
+    """Compute mu(a,i) coefficient for the M operator."""
+    l_unit = UNITARY_ADJUSTED_MATRICES[a - 1]
+    l_orig = GELL_MANN_MATRICES[a - 1]
+    
+    # Check if the i-th row matches
+    row_equal = np.allclose(l_unit[i-1, :], l_orig[i-1, :], atol=1e-10)
+    
+    if row_equal:
+        return 0.5  # Standard T = lambda/2 normalization
+    
+    # For differing rows, return half the diagonal element
+    orig_diag = l_orig[i - 1, i - 1]
+    return complex(orig_diag) / 2
+\end{lstlisting}
+
+\subsection{The \texorpdfstring{$\Lambda$}{Lambda} Gate}
+\label{subsec:impl_lambda_gate}
+
+The gluon-controlled colour rotation:
+
+\begin{lstlisting}[language=Python,caption={$\Lambda$ gate implementation},label={lst:lambda_gate}]
+def Lambda_gate(quark: QuantumRegister, gluon: QuantumRegister):
+    """Lambda gate: gluon-controlled colour rotation on quark."""
+    qc = QuantumCircuit(quark, gluon, name="Lambda")
+    n_ctrl = len(gluon)
+    
+    for a, L in enumerate(UNITARY_ADJUSTED_MATRICES, start=1):
+        expanded = expand_matrix(L)
+        base_gate = UnitaryGate(expanded, label=f"lhat{a}")
+        
+        # Control on gluon state |a-1>
+        ctrl_state = format(a - 1, f"0{n_ctrl}b")
+        CU = base_gate.control(num_ctrl_qubits=n_ctrl, 
+                               ctrl_state=ctrl_state)
+        
+        qc.append(CU, gluon[:] + quark[:])
+    
+    return qc
+\end{lstlisting}
+
+\subsection{The M Gate}
+\label{subsec:impl_m_gate}
+
+The unitarisation correction operator:
+
+\begin{lstlisting}[language=Python,caption={M gate implementation},label={lst:m_gate}]
+def M_gate(gluon, quark, U):
+    """M operator for unitarisation correction."""
+    qc = QuantumCircuit(gluon, quark, U, name="M")
+    n_g, n_q = len(gluon), len(quark)
+    
+    for a in range(1, 9):      # gluon colours 1-8
+        for i in range(1, 4):  # quark colours 1-3
+            alpha = mu_coefficient(a, i)
+            
+            if abs(alpha) < 1e-12:
+                continue
+            
+            B_circ = B_gate(alpha, U)
+            B_gate_obj = B_circ.to_gate()
+            
+            # Compute control state: (a-1) + 8*(i-1)
+            gluon_state = a - 1
+            quark_state = i - 1
+            ctrl_state_int = gluon_state + (2**n_g) * quark_state
+            ctrl_state = format(ctrl_state_int, f"0{n_g + n_q}b")
+            
+            controlled = B_gate_obj.control(
+                num_ctrl_qubits=n_g + n_q,
+                ctrl_state=ctrl_state
+            )
+            qc.append(controlled, list(gluon) + list(quark) + list(U))
+    
+    return qc
+\end{lstlisting}
+
+\subsection{The Q Gate}
+\label{subsec:impl_q_gate}
+
+The complete quark-gluon vertex:
+
+\begin{lstlisting}[language=Python,caption={Q gate implementation},label={lst:q_gate}]
+def Q_gate(gluon, quark, U):
+    """Q gate: complete quark-gluon interaction vertex."""
+    qc = QuantumCircuit(gluon, quark, U, name="Q")
+    
+    # 1. Increment U with A
+    qc.compose(A_gate(U), qubits=U, inplace=True)
+    
+    # 2. Conditional correction via M
+    qc.compose(
+        M_gate(gluon, quark, U),
+        qubits=list(gluon) + list(quark) + list(U),
+        inplace=True
+    )
+    
+    # 3. Apply Lambda on (quark, gluon)
+    qc.compose(
+        Lambda_gate(quark, gluon),
+        qubits=list(quark) + list(gluon),
+        inplace=True
+    )
+    
+    return qc
+\end{lstlisting}
+
+
+\section{Module: \texttt{circuits.py}}
+\label{sec:impl_circuits}
+
+\subsection{Quark-Antiquark Preparation}
+\label{subsec:impl_quark_prep}
+
+\begin{lstlisting}[language=Python,caption={Quark singlet preparation},label={lst:quark_prep}]
+def R_quark_prep(quark, anti_quark):
+    """Prepare quark-antiquark pair in colour singlet-like state."""
+    qc = QuantumCircuit(quark, anti_quark, name="R_q")
+    
+    # Apply R gate to quark register
+    qc.append(R_GATE, quark)
+    
+    # Entangle antiquark with quark via CNOTs
+    qc.cx(quark[0], anti_quark[0])
+    qc.cx(quark[1], anti_quark[1])
+    
+    return qc
+\end{lstlisting}
+
+\subsection{Gluon Preparation}
+\label{subsec:impl_gluon_prep}
+
+\begin{lstlisting}[language=Python,caption={Gluon superposition preparation},label={lst:gluon_prep}]
+def R_gluon_prep(gluon):
+    """Prepare gluon in equal superposition over 8 colours."""
+    qc = QuantumCircuit(gluon, name="R_g")
+    qc.h(gluon)  # H^3 creates equal superposition
+    return qc
+\end{lstlisting}
+
+\subsection{Quark Emission-Absorption Circuit}
+\label{subsec:impl_emission_absorption}
+
+\begin{lstlisting}[language=Python,caption={Quark self-energy circuit},label={lst:self_energy_circuit}]
+def quark_emission_absorption(n_vertices: int = 2):
+    """Build circuit for quark emitting and absorbing a gluon."""
+    NU = int(np.ceil(np.log2(n_vertices) + 1))
+    
+    # Create registers
+    g = QuantumRegister(3, 'g')        # gluon
+    U = QuantumRegister(NU, 'U')       # unitarisation
+    q = QuantumRegister(2, 'q')        # quark
+    qtil = QuantumRegister(2, 'qbar')  # anti-quark
+    
+    qc = QuantumCircuit(g, U, q, qtil, name="QuarkGluonDiagram")
+    
+    # Build gates
+    Rg_gate = R_gluon_prep(g).to_gate(label="R_g")
+    Rq_gate = R_quark_prep(q, qtil).to_gate(label="R_q")
+    Q_gate_obj = Q_gate(g, q, U).to_gate(label="Q")
+    
+    # Circuit structure: R_g -> R_q -> Q^n -> R_g^dag -> R_q^dag
+    qc.append(Rg_gate, g)
+    qc.append(Rq_gate, list(q) + list(qtil))
+    
+    for _ in range(n_vertices):
+        qc.append(Q_gate_obj, list(g) + list(q) + list(U))
+    
+    qc.append(Rg_gate.inverse(), g)
+    qc.append(Rq_gate.inverse(), list(q) + list(qtil))
+    
+    return qc
+\end{lstlisting}
+
+
+\section{Module: \texttt{colour\_factors.py}}
+\label{sec:impl_colour_factors}
+
+\subsection{Colour Factor Computation}
+\label{subsec:impl_compute}
+
+\begin{lstlisting}[language=Python,caption={Colour factor computation},label={lst:compute_colour_factor}]
+def compute_colour_factor_detailed(circuit, n_quarks=1, n_gluons=1, N_c=3):
+    """
+    Compute the colour factor with detailed intermediate results.
+    
+    Returns:
+        Tuple of (C, amplitude, N) where:
+            - C: The colour factor
+            - amplitude: The raw <0|psi_final> amplitude
+            - N: The normalization factor
+    """
+    # 1. Prepare initial state |0...0>
+    psi0 = Statevector.from_label("0" * circuit.num_qubits)
+    
+    # 2. Evolve through the circuit
+    psi_final = psi0.evolve(circuit)
+    
+    # 3. Extract amplitude of |0...0> (first component)
+    amp_omega = psi_final.data[0]
+    
+    # 4. Compute normalization factor
+    N = (N_c ** n_quarks) * ((N_c**2 - 1) ** n_gluons)
+    
+    # 5. Colour factor
+    C = N * amp_omega
+    
+    return C, amp_omega, N
+\end{lstlisting}
+
+
+\section{Testing}
+\label{sec:impl_testing}
+
+\subsection{Test Suite Overview}
+\label{subsec:test_overview}
+
+The \texttt{QC-Amp} library includes a comprehensive test suite using the pytest framework. Tests are organised into modules corresponding to the source modules:
+
+\begin{itemize}
+    \item \texttt{test\_su3.py}: Tests for Gell-Mann matrices and structure constants
+    \item \texttt{test\_gates.py}: Tests for individual gate unitarity and correctness
+    \item \texttt{test\_circuits.py}: Tests for circuit construction
+    \item \texttt{test\_colour\_factors.py}: End-to-end tests for colour factor computation
+\end{itemize}
+
+\subsection{Key Test Cases}
+\label{subsec:test_cases}
+
+\begin{lstlisting}[language=Python,caption={Example test cases},label={lst:tests}]
+def test_gellmann_hermitian():
+    """All Gell-Mann matrices should be Hermitian."""
+    for i, L in enumerate(GELL_MANN_MATRICES):
+        assert np.allclose(L, L.conj().T), f"L{i+1} not Hermitian"
+
+
+def test_adjusted_unitary():
+    """All adjusted matrices should be unitary."""
+    for i, L in enumerate(UNITARY_ADJUSTED_MATRICES):
+        product = L.conj().T @ L
+        assert np.allclose(product, np.eye(3)), f"l{i+1} not unitary"
+
+
+def test_colour_factor_self_energy():
+    """Quark self-energy colour factor should be 4."""
+    circuit = quark_emission_absorption(n_vertices=2)
+    C, amp, N = compute_colour_factor_detailed(circuit, n_quarks=1, n_gluons=1)
+    assert np.isclose(C.real, 4.0, atol=1e-6), f"Expected C=4, got {C}"
+\end{lstlisting}
+
+\subsection{Running Tests}
+\label{subsec:running_tests}
+
+Tests are run using pytest:
+\begin{lstlisting}[language=bash]
+cd QC-Amp
+pytest tests/ -v
+\end{lstlisting}
+
+All tests pass successfully, confirming the correctness of the implementation.

@@ -1,0 +1,434 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appendix A: Mathematical Details
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Complete Derivations}
+\label{sec:appendix_derivations}
+
+
+\subsection{SU(3) Algebra Relations}
+\label{subsec:su3_algebra}
+
+The SU(3) Lie algebra is defined by the commutation relations of its generators $T^a$ ($a = 1, \ldots, 8$):
+\begin{equation}
+[T^a, T^b] = i f^{abc} T^c
+\end{equation}
+where $f^{abc}$ are the totally antisymmetric structure constants. The anticommutation relations are:
+\begin{equation}
+\{T^a, T^b\} = \frac{1}{3}\delta^{ab} I + d^{abc} T^c
+\end{equation}
+where $d^{abc}$ are totally symmetric.
+
+
+\subsubsection{Non-zero Structure Constants}
+\label{subsubsec:structure_constants}
+
+The non-zero structure constants $f^{abc}$ (up to antisymmetric permutations) are:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+$(a, b, c)$ & $f^{abc}$ \\
+\hline
+$(1, 2, 3)$ & $1$ \\
+$(1, 4, 7)$ & $1/2$ \\
+$(1, 5, 6)$ & $-1/2$ \\
+$(2, 4, 6)$ & $1/2$ \\
+$(2, 5, 7)$ & $1/2$ \\
+$(3, 4, 5)$ & $1/2$ \\
+$(3, 6, 7)$ & $-1/2$ \\
+$(4, 5, 8)$ & $\sqrt{3}/2$ \\
+$(6, 7, 8)$ & $\sqrt{3}/2$ \\
+\hline
+\end{tabular}
+\end{center}
+
+
+\subsubsection{Gell-Mann Matrix Trace Relations}
+\label{subsubsec:trace_relations}
+
+The Gell-Mann matrices satisfy:
+\begin{align}
+\text{Tr}(\lambda^a) &= 0 \\
+\text{Tr}(\lambda^a \lambda^b) &= 2\delta^{ab} \\
+\text{Tr}(\lambda^a \lambda^b \lambda^c) &= 2(d^{abc} + i f^{abc}) \\
+\text{Tr}(\lambda^a \lambda^b \lambda^c \lambda^d) &= \frac{4}{3}\delta^{ab}\delta^{cd} + 2(d^{abe} + i f^{abe})(d^{cde} + i f^{cde})
+\end{align}
+
+
+\subsection{Colour Factor Derivation for Quark Self-Energy}
+\label{subsec:cf_derivation}
+
+For the quark self-energy diagram with gluon momentum $k$, the colour factor arises from:
+\begin{equation}
+C = \sum_{a=1}^{8} \sum_{i,j=1}^{3} T^a_{ij} T^a_{ji} = \sum_{a=1}^{8} \text{Tr}(T^a T^a)
+\end{equation}
+
+Using $\text{Tr}(T^a T^b) = T_F \delta^{ab}$ with $T_F = 1/2$:
+\begin{equation}
+C = \sum_{a=1}^{8} T_F = 8 \times \frac{1}{2} = 4
+\end{equation}
+
+The same result can be obtained from the Casimir relation:
+\begin{equation}
+T^a_{ij} T^a_{jk} = C_F \delta_{ik}
+\end{equation}
+where $C_F = (N_c^2 - 1)/(2N_c) = 4/3$ for $N_c = 3$. Then:
+\begin{equation}
+C = \text{Tr}(T^a T^a) = C_F \cdot N_c = \frac{4}{3} \times 3 = 4
+\end{equation}
+
+
+\subsection{Unitarisation Coefficient Derivation}
+\label{subsec:unitarisation_derivation}
+
+The unitary-adjusted matrices $\hat{\lambda}_a$ are defined such that $\hat{\lambda}_a$ is unitary. For $a = 1, \ldots, 7$:
+\begin{equation}
+\hat{\lambda}_a = \lambda_a \quad \text{(already unitary)}
+\end{equation}
+For $a = 8$:
+\begin{equation}
+\hat{\lambda}_8 = I_{3\times 3} \quad \text{(replaces the non-unitary } \lambda_8 \text{)}
+\end{equation}
+
+The correction coefficients $\mu(a, i)$ are defined by:
+\begin{equation}
+\lambda_a |i\rangle = \mu(a, i) \hat{\lambda}_a |i\rangle
+\end{equation}
+
+For $a = 8$:
+\begin{equation}
+\lambda_8 |i\rangle = \frac{1}{\sqrt{3}}\text{diag}(1, 1, -2) |i\rangle = \begin{cases}
+\frac{1}{\sqrt{3}} |i\rangle & i = 1, 2 \\
+-\frac{2}{\sqrt{3}} |i\rangle & i = 3
+\end{cases}
+\end{equation}
+Since $\hat{\lambda}_8 |i\rangle = |i\rangle$:
+\begin{equation}
+\mu(8, i) = \begin{cases}
+\frac{1}{\sqrt{3}} & i = 1, 2 \\
+-\frac{2}{\sqrt{3}} & i = 3
+\end{cases}
+\end{equation}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appendix B: Code Listings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Code Listings}
+\label{sec:appendix_code}
+
+
+\subsection{Complete Gell-Mann Matrix Definitions}
+\label{subsec:code_gellmann}
+
+\begin{lstlisting}[language=Python, caption={Gell-Mann matrix definitions in \texttt{su3.py}}]
+import numpy as np
+
+GELL_MANN_MATRICES = [
+    # lambda_1
+    np.array([
+        [0, 1, 0],
+        [1, 0, 0],
+        [0, 0, 0]
+    ], dtype=complex),
+    
+    # lambda_2
+    np.array([
+        [0, -1j, 0],
+        [1j, 0, 0],
+        [0, 0, 0]
+    ], dtype=complex),
+    
+    # lambda_3
+    np.array([
+        [1, 0, 0],
+        [0, -1, 0],
+        [0, 0, 0]
+    ], dtype=complex),
+    
+    # lambda_4
+    np.array([
+        [0, 0, 1],
+        [0, 0, 0],
+        [1, 0, 0]
+    ], dtype=complex),
+    
+    # lambda_5
+    np.array([
+        [0, 0, -1j],
+        [0, 0, 0],
+        [1j, 0, 0]
+    ], dtype=complex),
+    
+    # lambda_6
+    np.array([
+        [0, 0, 0],
+        [0, 0, 1],
+        [0, 1, 0]
+    ], dtype=complex),
+    
+    # lambda_7
+    np.array([
+        [0, 0, 0],
+        [0, 0, -1j],
+        [0, 1j, 0]
+    ], dtype=complex),
+    
+    # lambda_8
+    (1/np.sqrt(3)) * np.array([
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, -2]
+    ], dtype=complex)
+]
+\end{lstlisting}
+
+
+\subsection{Q Gate Implementation}
+\label{subsec:code_q_gate}
+
+\begin{lstlisting}[language=Python, caption={Q gate construction in \texttt{gates.py}}]
+def Q_gate(
+    qc: QuantumCircuit,
+    quark_reg: QuantumRegister,
+    gluon_reg: QuantumRegister,
+    quark_index: int
+) -> None:
+    """
+    Apply the complete Q gate (Lambda * M * A) for one quark-gluon vertex.
+    
+    Parameters
+    ----------
+    qc : QuantumCircuit
+        The quantum circuit to add the gate to.
+    quark_reg : QuantumRegister
+        Register containing quark colour qubits.
+    gluon_reg : QuantumRegister
+        Register containing gluon colour qubits.
+    quark_index : int
+        Index of the quark in the register (0 for first quark).
+    """
+    n_q = quark_colour_bits()  # 2 qubits per quark
+    n_g = 3  # 3 qubits per gluon
+    
+    # Identify the quark qubits for this vertex
+    quark_qubits = [quark_reg[quark_index * n_q + j] for j in range(n_q)]
+    gluon_qubits = list(gluon_reg)
+    
+    # Apply A gate: increment gluon register
+    A_gate(qc, gluon_qubits)
+    
+    # Apply M gate: amplitude correction
+    M_gate(qc, quark_qubits, gluon_qubits)
+    
+    # Apply Lambda gate: colour rotation
+    Lambda_gate(qc, quark_qubits, gluon_qubits)
+\end{lstlisting}
+
+
+\subsection{Colour Factor Extraction}
+\label{subsec:code_extraction}
+
+\begin{lstlisting}[language=Python, caption={Colour factor extraction in \texttt{colour\_factors.py}}]
+def compute_colour_factor_detailed(
+    qc: QuantumCircuit,
+    n_quarks: int,
+    n_gluons: int
+) -> Tuple[complex, complex, float]:
+    """
+    Compute the colour factor from a prepared quantum circuit.
+    
+    Returns
+    -------
+    Tuple[complex, complex, float]
+        (colour_factor, amplitude, normalisation)
+    """
+    N_c = 3
+    n_q = 2  # qubits per quark
+    n_g = 3  # qubits per gluon
+    
+    # Compute normalisation
+    N = (N_c ** n_quarks) * ((N_c**2 - 1) ** n_gluons)
+    
+    # Get statevector
+    sv = Statevector.from_instruction(qc)
+    
+    # Reference state |Omega> = |0...0>
+    amplitude = sv.data[0]
+    
+    # Colour factor
+    C = N * amplitude
+    
+    return C, amplitude, N
+\end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appendix C: Test Suite
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Test Suite Summary}
+\label{sec:appendix_tests}
+
+The \texttt{QC-Amp} library includes a comprehensive test suite. Below we summarise the test coverage.
+
+
+\subsection{SU(3) Module Tests}
+\label{subsec:tests_su3}
+
+\begin{lstlisting}[language=Python, caption={Sample SU(3) tests}]
+def test_gell_mann_traceless():
+    """Verify all Gell-Mann matrices are traceless."""
+    for i, lam in enumerate(GELL_MANN_MATRICES):
+        assert np.isclose(np.trace(lam), 0), f"lambda_{i+1} not traceless"
+
+def test_gell_mann_orthonormality():
+    """Verify Tr(lambda_a * lambda_b) = 2 * delta_ab."""
+    for i, lam_a in enumerate(GELL_MANN_MATRICES):
+        for j, lam_b in enumerate(GELL_MANN_MATRICES):
+            trace = np.trace(lam_a @ lam_b)
+            expected = 2 if i == j else 0
+            assert np.isclose(trace, expected)
+\end{lstlisting}
+
+
+\subsection{Gates Module Tests}
+\label{subsec:tests_gates}
+
+\begin{lstlisting}[language=Python, caption={Sample gate tests}]
+def test_A_gate_increment():
+    """Verify A gate increments modulo 8."""
+    qc = QuantumCircuit(3)
+    A_gate(qc, [0, 1, 2])
+    sv = Statevector.from_instruction(qc)
+    # |000> -> |001>
+    assert np.isclose(sv.data[1], 1.0)
+
+def test_identity_33():
+    """Verify Eq. (33): sum over a,i of |mu(a,i)|^2 = 24."""
+    total = 0
+    for a in range(1, 9):
+        for i in range(1, 4):
+            total += abs(mu_coefficient(a, i))**2
+    assert np.isclose(total, 24)
+\end{lstlisting}
+
+
+\subsection{Integration Tests}
+\label{subsec:tests_integration}
+
+\begin{lstlisting}[language=Python, caption={End-to-end colour factor test}]
+def test_figure1_colour_factor():
+    """Verify colour factor for Figure 1 equals 4."""
+    qc = quark_emission_absorption(n_vertices=2)
+    C, amplitude, N = compute_colour_factor_detailed(qc, n_quarks=1, n_gluons=1)
+    
+    assert np.isclose(N, 24), f"Expected N=24, got {N}"
+    assert np.isclose(abs(amplitude), 1/6), f"Expected |amp|=1/6, got {abs(amplitude)}"
+    assert np.isclose(C.real, 4.0), f"Expected C=4, got {C.real}"
+\end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appendix D: Circuit Diagrams
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Full Circuit Diagrams}
+\label{sec:appendix_circuits}
+
+This appendix contains full-size circuit diagrams generated by Qiskit.
+
+
+\subsection{Figure 1 Circuit (Quark Self-Energy)}
+\label{subsec:circuit_fig1}
+
+\begin{figure}[htbp]
+\centering
+% PLACEHOLDER: Insert full circuit diagram
+\fbox{\begin{minipage}{0.9\textwidth}
+\centering
+\vspace{2cm}
+\texttt{[Full Qiskit circuit diagram for Figure 1]}\\
+\texttt{[Generated via qc.draw('mpl')]}
+\vspace{2cm}
+\end{minipage}}
+\caption{Complete quantum circuit for the quark self-energy diagram, showing all qubit registers and gate operations.}
+\label{fig:appendix_circuit_fig1}
+\end{figure}
+
+
+\subsection{Circuit Legend}
+\label{subsec:circuit_legend}
+
+\begin{table}[htbp]
+\centering
+\caption{Gate symbols used in circuit diagrams.}
+\label{tab:circuit_legend}
+\begin{tabular}{|c|l|l|}
+\hline
+\textbf{Symbol} & \textbf{Gate} & \textbf{Description} \\
+\hline
+\texttt{H} & Hadamard & Creates superposition \\
+\texttt{X} & Pauli-X & Bit flip \\
+\texttt{RY($\theta$)} & Y-rotation & Amplitude adjustment \\
+\texttt{$\bullet$} & Control & Control qubit for controlled gate \\
+\texttt{$\oplus$} & Target & Target of CNOT \\
+\hline
+\end{tabular}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appendix E: Numerical Results Tables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Complete Numerical Results}
+\label{sec:appendix_results}
+
+
+\subsection{Statevector Components}
+\label{subsec:statevector_components}
+
+The final statevector for the Figure 1 circuit has the following non-zero amplitudes:
+
+\begin{table}[htbp]
+\centering
+\caption{Non-zero statevector amplitudes for Figure 1 circuit.}
+\label{tab:statevector_amplitudes}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{State} & \textbf{Gluon} & \textbf{Quark} & \textbf{Amplitude} \\
+\hline
+$|00000\rangle$ & $|000\rangle = 0$ & $|00\rangle = 0$ & $1/6$ \\
+\hline
+\multicolumn{4}{|c|}{\textit{Additional non-zero states...}} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\subsection{Intermediate State Evolution}
+\label{subsec:state_evolution}
+
+Table~\ref{tab:state_evolution} shows the statevector evolution through each stage of the circuit.
+
+\begin{table}[htbp]
+\centering
+\caption{Statevector evolution through circuit stages.}
+\label{tab:state_evolution}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Stage} & \textbf{Non-zero amplitudes} & \textbf{Reference amplitude} \\
+\hline
+Initial $|0\rangle^{\otimes 5}$ & 1 & 1.0 \\
+After $R_g$ (Hadamard) & 8 & $1/\sqrt{8}$ \\
+After $R_q$ (singlet) & $8 \times 3 = 24$ & varies \\
+After first $Q$ & varies & varies \\
+After second $Q$ & varies & $1/6$ \\
+\hline
+\end{tabular}
+\end{table}
+
+% PLACEHOLDER: Add complete numerical data from notebook execution

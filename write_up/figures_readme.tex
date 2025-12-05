@@ -1,0 +1,75 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figures README
+% 
+% This file documents how to generate the figures for the thesis/report.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% FIGURE GENERATION INSTRUCTIONS
+% ==============================
+%
+% The figures for this document can be generated using the QC-Amp library
+% and associated Jupyter notebooks. Below are instructions for each figure.
+%
+% Prerequisites:
+% - Python 3.10+ with Qiskit 2.x installed
+% - Activate the conda environment: conda activate Q_env
+% - Ensure QC-Amp library is installed: pip install -e .
+%
+% ============================================================================
+% CHAPTER 2: Theoretical Background
+% ============================================================================
+%
+% Figure 2.1: QCD Vertices
+% - Source: Hand-drawn or generated with TikZ-Feynman
+% - Location: write_up/figures/qcd_vertices.pdf
+%
+% Figure 2.2: Quark Self-Energy Diagram  
+% - Source: generated_table1_diagrams/D1.png
+% - Copy to: write_up/figures/feynman_quark_self_energy.png
+%
+% ============================================================================
+% CHAPTER 4: Implementation
+% ============================================================================
+%
+% Figure 4.1: Library Architecture
+% - Generate with: draw.io or similar
+% - Location: write_up/figures/library_architecture.pdf
+%
+% Figure 4.2: Circuit Diagram for Quark Self-Energy
+% - Generate with Qiskit:
+%   ```python
+%   from qc_amp.circuits import quark_emission_absorption
+%   qc = quark_emission_absorption(n_vertices=2)
+%   qc.draw('mpl', filename='write_up/figures/circuit_quark_self_energy.png')
+%   ```
+%
+% ============================================================================
+% CHAPTER 5: Results
+% ============================================================================
+%
+% Figure 5.1: Table 1 Diagrams
+% - Pre-generated in: generated_table1_diagrams/
+% - Copy D1.png, D2.png, D3.png to write_up/figures/
+%
+% Figure 5.2: Colour Factor Convergence (if applicable)
+% - Generate from Jupyter notebook execution
+%
+% ============================================================================
+% TABLE DATA
+% ============================================================================
+%
+% Table 1 Diagram Summary:
+% - Source: generated_table1_diagrams/table1_diagram_summary.csv
+%
+% Colour Factor Results:
+% - Generate by running: python -c "from qc_amp.colour_factors import *; ..."
+%
+% ============================================================================
+% QUICK COPY COMMANDS (Windows)
+% ============================================================================
+%
+% copy ..\generated_table1_diagrams\D1.png figures\
+% copy ..\generated_table1_diagrams\D2.png figures\
+% copy ..\generated_table1_diagrams\D3.png figures\
+%
+% ============================================================================

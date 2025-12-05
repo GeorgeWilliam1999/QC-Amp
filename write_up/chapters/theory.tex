@@ -1,0 +1,380 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapter 2: Theoretical Background
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Quantum Chromodynamics}
+\label{sec:theory_qcd}
+
+Quantum Chromodynamics (QCD) is the relativistic quantum field theory describing the strong interaction between quarks and gluons. It is a non-Abelian gauge theory based on the gauge group $\SU{3}_c$, where the subscript $c$ denotes ``colour.'' QCD forms a central pillar of the Standard Model of particle physics and is essential for understanding phenomena ranging from the structure of protons and neutrons to jet production at the Large Hadron Collider.
+
+\subsection{The QCD Lagrangian}
+\label{subsec:qcd_lagrangian}
+
+The QCD Lagrangian density is given by
+\begin{equation}
+    \mathcal{L}_{\mathrm{QCD}} = \sum_f \bar{\psi}_f^i \left( i \gamma^\mu D_\mu - m_f \right)_{ij} \psi_f^j - \frac{1}{4} G^a_{\mu\nu} G^{a\mu\nu},
+    \label{eq:qcd_lagrangian}
+\end{equation}
+where:
+\begin{itemize}
+    \item $\psi_f^i$ is the quark field of flavour $f$ and colour $i \in \{1, 2, 3\}$,
+    \item $m_f$ is the quark mass for flavour $f$,
+    \item $\gamma^\mu$ are the Dirac gamma matrices,
+    \item $D_\mu$ is the covariant derivative,
+    \item $G^a_{\mu\nu}$ is the gluon field strength tensor for adjoint index $a \in \{1, \ldots, 8\}$.
+\end{itemize}
+
+The covariant derivative acting on quark fields is
+\begin{equation}
+    D_\mu = \partial_\mu - i g_s T^a A^a_\mu,
+    \label{eq:covariant_derivative}
+\end{equation}
+where $g_s$ is the strong coupling constant, $T^a$ are the generators of $\SU{3}$ in the fundamental representation, and $A^a_\mu$ are the eight gluon fields.
+
+The gluon field strength tensor is
+\begin{equation}
+    G^a_{\mu\nu} = \partial_\mu A^a_\nu - \partial_\nu A^a_\mu + g_s \structconst{a}{b}{c} A^b_\mu A^c_\nu,
+    \label{eq:field_strength}
+\end{equation}
+where $\structconst{a}{b}{c}$ are the structure constants of $\SU{3}$, defined by the commutation relations
+\begin{equation}
+    [T^a, T^b] = i \structconst{a}{b}{c} T^c.
+    \label{eq:commutator}
+\end{equation}
+
+The non-Abelian nature of QCD is manifest in the third term of Eq.~\eqref{eq:field_strength}: gluons carry colour charge and can interact with themselves, leading to triple-gluon and quartic-gluon vertices in addition to the quark-gluon vertex.
+
+\subsection{Colour Confinement and Asymptotic Freedom}
+\label{subsec:confinement}
+
+QCD exhibits two remarkable properties:
+
+\begin{enumerate}
+    \item \textbf{Colour confinement}: Isolated quarks and gluons are never observed; they are always confined within colour-neutral hadrons (mesons, baryons).
+    
+    \item \textbf{Asymptotic freedom}: At high energies (short distances), the effective coupling $\alpha_s = g_s^2 / (4\pi)$ becomes weak, allowing perturbative calculations~\cite{Gross1973, Politzer1973}.
+\end{enumerate}
+
+For scattering processes at high-energy colliders, asymptotic freedom justifies the use of perturbation theory in $\alpha_s$. Scattering amplitudes are expanded as series in $\alpha_s$, with each order corresponding to a different number of loops in the associated Feynman diagrams.
+
+
+\section{The SU(3) Colour Group}
+\label{sec:theory_su3}
+
+\subsection{Definition and Properties}
+\label{subsec:su3_definition}
+
+The special unitary group $\SU{3}$ consists of all $3 \times 3$ unitary matrices with unit determinant:
+\begin{equation}
+    \SU{3} = \{ U \in \mathrm{GL}(3, \mathbb{C}) \mid U^\dagger U = \mathbb{1}, \, \det U = 1 \}.
+    \label{eq:su3_definition}
+\end{equation}
+
+As a Lie group, $\SU{3}$ is:
+\begin{itemize}
+    \item Compact (closed and bounded)
+    \item Connected but not simply connected
+    \item Eight-dimensional: $\dim \SU{3} = \Nc^2 - 1 = 8$
+\end{itemize}
+
+\subsection{The Lie Algebra \texorpdfstring{$\mathfrak{su}(3)$}{su(3)}}
+\label{subsec:lie_algebra}
+
+The Lie algebra $\mathfrak{su}(3)$ consists of all $3 \times 3$ traceless anti-Hermitian matrices. It is conventional in physics to work with Hermitian generators, defining
+\begin{equation}
+    \mathfrak{su}(3)_{\text{physics}} = \{ X \in \mathrm{M}(3, \mathbb{C}) \mid X^\dagger = X, \, \Tr X = 0 \}.
+    \label{eq:lie_algebra}
+\end{equation}
+
+The dimension of $\mathfrak{su}(3)$ is 8, corresponding to the eight independent parameters needed to specify an $\SU{3}$ transformation (9 real parameters for a $3 \times 3$ complex matrix, minus 6 from unitarity, minus 1 from unit determinant).
+
+
+\section{The Gell-Mann Matrices}
+\label{sec:theory_gellmann}
+
+\subsection{Definition}
+\label{subsec:gellmann_definition}
+
+The Gell-Mann matrices $\gellmann{1}, \ldots, \gellmann{8}$ provide a standard basis for $\mathfrak{su}(3)$~\cite{GellMann1962}. They are the $\SU{3}$ analogue of the Pauli matrices for $\SU{2}$.
+
+Explicitly, the eight Gell-Mann matrices are:
+
+\begin{equation}
+    \gellmann{1} = \begin{pmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix}, \quad
+    \gellmann{2} = \begin{pmatrix} 0 & -i & 0 \\ i & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix}, \quad
+    \gellmann{3} = \begin{pmatrix} 1 & 0 & 0 \\ 0 & -1 & 0 \\ 0 & 0 & 0 \end{pmatrix},
+    \label{eq:gellmann_123}
+\end{equation}
+
+\begin{equation}
+    \gellmann{4} = \begin{pmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ 1 & 0 & 0 \end{pmatrix}, \quad
+    \gellmann{5} = \begin{pmatrix} 0 & 0 & -i \\ 0 & 0 & 0 \\ i & 0 & 0 \end{pmatrix},
+    \label{eq:gellmann_45}
+\end{equation}
+
+\begin{equation}
+    \gellmann{6} = \begin{pmatrix} 0 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 1 & 0 \end{pmatrix}, \quad
+    \gellmann{7} = \begin{pmatrix} 0 & 0 & 0 \\ 0 & 0 & -i \\ 0 & i & 0 \end{pmatrix},
+    \label{eq:gellmann_67}
+\end{equation}
+
+\begin{equation}
+    \gellmann{8} = \frac{1}{\sqrt{3}} \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & -2 \end{pmatrix}.
+    \label{eq:gellmann_8}
+\end{equation}
+
+\subsection{Properties of the Gell-Mann Matrices}
+\label{subsec:gellmann_properties}
+
+The Gell-Mann matrices satisfy the following important properties:
+
+\begin{enumerate}
+    \item \textbf{Hermiticity}: Each $\gellmann{a}$ is Hermitian:
+    \begin{equation}
+        (\gellmann{a})^\dagger = \gellmann{a} \quad \forall a \in \{1, \ldots, 8\}.
+        \label{eq:gellmann_hermitian}
+    \end{equation}
+    
+    \item \textbf{Tracelessness}: Each $\gellmann{a}$ is traceless:
+    \begin{equation}
+        \Tr(\gellmann{a}) = 0 \quad \forall a \in \{1, \ldots, 8\}.
+        \label{eq:gellmann_traceless}
+    \end{equation}
+    
+    \item \textbf{Orthonormality}: The matrices satisfy
+    \begin{equation}
+        \Tr(\gellmann{a} \gellmann{b}) = 2 \delta_{ab}.
+        \label{eq:gellmann_orthonormal}
+    \end{equation}
+    
+    \item \textbf{Completeness}: Any traceless Hermitian $3 \times 3$ matrix $X$ can be expanded as
+    \begin{equation}
+        X = \sum_{a=1}^{8} x_a \gellmann{a}, \quad x_a = \frac{1}{2} \Tr(X \gellmann{a}).
+        \label{eq:gellmann_completeness}
+    \end{equation}
+\end{enumerate}
+
+\subsection{SU(3) Generators in the Fundamental Representation}
+\label{subsec:generators}
+
+The generators of $\SU{3}$ in the fundamental representation are defined as
+\begin{equation}
+    \generator{a} = \frac{\gellmann{a}}{2}, \quad a = 1, \ldots, 8.
+    \label{eq:generators}
+\end{equation}
+
+With this normalisation, the generators satisfy
+\begin{equation}
+    \Tr(\generator{a} \generator{b}) = \frac{1}{2} \delta_{ab},
+    \label{eq:generator_trace}
+\end{equation}
+which is the standard convention in particle physics.
+
+The commutation relations are
+\begin{equation}
+    [\generator{a}, \generator{b}] = i \structconst{a}{b}{c} \generator{c},
+    \label{eq:generator_commutator}
+\end{equation}
+where the structure constants $\structconst{a}{b}{c}$ are totally antisymmetric in all three indices.
+
+
+\section{Colour Factors in Feynman Diagrams}
+\label{sec:theory_colour_factors}
+
+\subsection{Feynman Rules for Colour}
+\label{subsec:feynman_colour}
+
+In perturbative QCD, scattering amplitudes are computed using Feynman diagrams. Each diagram consists of propagators (internal lines) and vertices, with associated Feynman rules specifying the mathematical contributions.
+
+For the colour structure, the relevant Feynman rules are~\cite{Peskin1995, Ellis1996}:
+
+\begin{enumerate}
+    \item \textbf{Quark propagator}: A quark line connecting colour indices $i$ and $j$ contributes $\delta_{ij}$.
+    
+    \item \textbf{Gluon propagator}: A gluon line connecting adjoint indices $a$ and $b$ contributes $\delta_{ab}$.
+    
+    \item \textbf{Quark-gluon vertex}: A vertex connecting a gluon of colour $a$ to a quark line changing from colour $j$ to colour $i$ contributes $(\generator{a})_{ij}$.
+    
+    \item \textbf{Triple-gluon vertex}: A vertex connecting three gluons with colours $a$, $b$, $c$ contributes $\structconst{a}{b}{c}$.
+    
+    \item \textbf{Closed quark loop}: A closed quark loop requires a trace over colour indices.
+\end{enumerate}
+
+\subsection{Definition of Colour Factor}
+\label{subsec:colour_factor_definition}
+
+The \textbf{colour factor} $C$ of a Feynman diagram is the result of evaluating all the group-theoretic contractions specified by the Feynman rules above. It is a numerical factor (typically an integer or simple fraction for QCD) that multiplies the kinematic part of the amplitude.
+
+\begin{definition}[Colour Factor]
+For a Feynman diagram $\mathcal{D}$, the colour factor is
+\begin{equation}
+    C(\mathcal{D}) = \text{(product of all } \generator{a} \text{ and } \structconst{a}{b}{c} \text{ contracted over internal indices)}.
+    \label{eq:colour_factor_def}
+\end{equation}
+\end{definition}
+
+\subsection{Example: Quark Self-Energy}
+\label{subsec:example_self_energy}
+
+Consider the quark self-energy diagram, where a quark emits and reabsorbs a gluon:
+
+\begin{center}
+% PLACEHOLDER: Insert Feynman diagram figure
+\textit{[Figure placeholder: Quark self-energy Feynman diagram]}
+\end{center}
+
+The colour structure involves:
+\begin{itemize}
+    \item Incoming quark with colour $i$
+    \item First vertex: $(\generator{a})_{ij}$
+    \item Gluon propagator: $\delta_{ab}$ (with $a = b$ for the same gluon line)
+    \item Second vertex: $(\generator{a})_{jk}$
+    \item Outgoing quark with colour $k$
+    \item Contraction with external states: $\delta_{ik}$
+\end{itemize}
+
+The colour factor is therefore
+\begin{align}
+    C &= \sum_{a=1}^{8} \sum_{i,j,k=1}^{3} (\generator{a})_{ij} (\generator{a})_{jk} \delta_{ik} \\
+      &= \sum_{a=1}^{8} \sum_{i,j=1}^{3} (\generator{a})_{ij} (\generator{a})_{ji} \\
+      &= \sum_{a=1}^{8} \Tr[(\generator{a})^2] \\
+      &= \sum_{a=1}^{8} \frac{1}{2} \quad \text{(using } \Tr(\generator{a} \generator{b}) = \tfrac{1}{2} \delta_{ab} \text{)} \\
+      &= \frac{8}{2} = 4.
+    \label{eq:self_energy_colour}
+\end{align}
+
+This result, $C = 4$, will serve as our primary benchmark for validating the quantum circuit implementation.
+
+\subsection{Casimir Invariants}
+\label{subsec:casimirs}
+
+The quadratic Casimir operators are fundamental invariants of the representation theory. For $\SU{\Nc}$:
+
+\begin{definition}[Quadratic Casimir of the Fundamental Representation]
+\begin{equation}
+    \CF = \sum_{a=1}^{\Nc^2 - 1} (\generator{a})^2 = \frac{\Nc^2 - 1}{2\Nc}.
+    \label{eq:casimir_fundamental}
+\end{equation}
+For $\Nc = 3$: $\CF = \frac{8}{6} = \frac{4}{3}$.
+\end{definition}
+
+\begin{definition}[Quadratic Casimir of the Adjoint Representation]
+\begin{equation}
+    \CA = \Nc.
+    \label{eq:casimir_adjoint}
+\end{equation}
+For $\Nc = 3$: $\CA = 3$.
+\end{definition}
+
+The colour factor of the quark self-energy can be expressed as
+\begin{equation}
+    C = \CF \cdot \Nc = \frac{4}{3} \times 3 = 4.
+    \label{eq:self_energy_casimir}
+\end{equation}
+
+
+\section{Qubit Encoding of Colour States}
+\label{sec:theory_encoding}
+
+\subsection{The Encoding Challenge}
+\label{subsec:encoding_challenge}
+
+To implement colour factor calculations on a quantum computer, we must encode colour states in qubits. The key dimensions are:
+
+\begin{table}[htbp]
+\centering
+\caption{Colour state dimensions and qubit requirements}
+\label{tab:encoding}
+\begin{tabular}{llcc}
+\toprule
+Particle & Representation & Dimension & Qubits \\
+\midrule
+Quark & Fundamental ($\mathbf{3}$) & 3 & 2 \\
+Antiquark & Antifundamental ($\bar{\mathbf{3}}$) & 3 & 2 \\
+Gluon & Adjoint ($\mathbf{8}$) & 8 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Quark Colour Encoding}
+\label{subsec:quark_encoding}
+
+Quark colours are encoded in 2 qubits as follows:
+\begin{equation}
+\begin{aligned}
+    \text{Colour 1 (red)}   &\mapsto \ket{00} \\
+    \text{Colour 2 (green)} &\mapsto \ket{01} \\
+    \text{Colour 3 (blue)}  &\mapsto \ket{10} \\
+    \text{(unused)}         &\mapsto \ket{11}
+\end{aligned}
+\label{eq:quark_encoding}
+\end{equation}
+
+The state $\ket{11}$ is not used for physical colour states. This is important: any quantum gate acting on the quark register must leave the $\ket{11}$ subspace invariant or at least not couple it to the physical subspace.
+
+\subsection{Gluon Colour Encoding}
+\label{subsec:gluon_encoding}
+
+Gluon colours are encoded in 3 qubits:
+\begin{equation}
+    \text{Colour } a \mapsto \ket{a-1}_{\text{binary}}, \quad a = 1, \ldots, 8.
+\label{eq:gluon_encoding}
+\end{equation}
+
+For example:
+\begin{equation}
+\begin{aligned}
+    a = 1 &\mapsto \ket{000} \\
+    a = 2 &\mapsto \ket{001} \\
+    &\vdots \\
+    a = 8 &\mapsto \ket{111}
+\end{aligned}
+\label{eq:gluon_encoding_examples}
+\end{equation}
+
+All 8 basis states are used, so there is no unused subspace for the gluon register.
+
+
+\section{The Unitarisation Problem}
+\label{sec:theory_unitarisation}
+
+\subsection{Non-Unitarity of Generators}
+\label{subsec:non_unitarity}
+
+The fundamental obstacle to directly implementing colour factors on a quantum computer is that the SU(3) generators $\generator{a}$ are \textbf{Hermitian but not unitary}:
+\begin{equation}
+    (\generator{a})^\dagger = \generator{a} \neq (\generator{a})^{-1}.
+    \label{eq:non_unitary}
+\end{equation}
+
+Quantum gates, however, must be unitary transformations. A $3 \times 3$ matrix $U$ is unitary if and only if
+\begin{equation}
+    U^\dagger U = U U^\dagger = \mathbb{1}.
+    \label{eq:unitary_condition}
+\end{equation}
+
+The Gell-Mann matrices fail this condition. For example:
+\begin{equation}
+    \gellmann{1}^\dagger \gellmann{1} = \gellmann{1}^2 = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 0 \end{pmatrix} \neq \mathbb{1}.
+    \label{eq:lambda1_not_unitary}
+\end{equation}
+
+\subsection{The Chawdhry--Pellen Solution}
+\label{subsec:cp_solution}
+
+The key insight of Chawdhry and Pellen~\cite{ChawdhryPellen2023} is that while $\generator{a}$ cannot be implemented directly, we can:
+
+\begin{enumerate}
+    \item Define \textbf{unitary-adjusted matrices} $\lhat{a}$ that are unitary and ``close'' to $\gellmann{a}$ in a specific sense.
+    
+    \item Use an \textbf{ancillary register} (the ``unitarisation register'') to encode the corrections needed to recover the action of $\generator{a}$ from $\lhat{a}$.
+    
+    \item Extract the colour factor from the \textbf{amplitude} of a specific ancilla state, rather than from expectation values.
+\end{enumerate}
+
+This approach is described in detail in Chapter~\ref{ch:algorithm}. The mathematical foundation is the identity
+\begin{equation}
+    \mu(a, i) \, \lhat{a} \ket{i} = \generator{a} \ket{i},
+    \label{eq:unitarisation_identity}
+\end{equation}
+where $\mu(a, i)$ is a correction coefficient with $|\mu(a, i)| \leq 1$, allowing it to be encoded as a quantum amplitude.

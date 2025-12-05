@@ -1,0 +1,275 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% QC-Amp: Quantum Computation of QCD Colour Factors
+% PhD Thesis Chapter / Technical Report
+%
+% Author: [Your Name]
+% Institution: [Your Institution]
+% Date: December 2025
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,a4paper]{report}
+
+%------------------------------------------------------------------------------
+% Packages
+%------------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{mathtools}
+\usepackage{physics}
+\usepackage{braket}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{quantikz}
+\usepackage[sorting=none,style=numeric-comp]{biblatex}
+\usepackage{geometry}
+\usepackage{tcolorbox}
+
+\geometry{margin=2.5cm}
+\graphicspath{{figures/}}
+
+%------------------------------------------------------------------------------
+% Custom Commands
+%------------------------------------------------------------------------------
+\newcommand{\Nc}{N_c}
+\newcommand{\Nq}{n_q}
+\newcommand{\Ng}{n_g}
+\newcommand{\SU}[1]{\mathrm{SU}(#1)}
+\renewcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\CF}{C_F}
+\newcommand{\CA}{C_A}
+\newcommand{\lhat}[1]{\hat{\lambda}_{#1}}
+\newcommand{\gellmann}[1]{\lambda_{#1}}
+\newcommand{\generator}[1]{T^{#1}}
+\newcommand{\structconst}[3]{f^{#1 #2 #3}}
+
+%------------------------------------------------------------------------------
+% Theorem Environments
+%------------------------------------------------------------------------------
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}{Remark}[chapter]
+\newtheorem{example}{Example}[chapter]
+
+%------------------------------------------------------------------------------
+% Code Listings Style
+%------------------------------------------------------------------------------
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{red},
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    captionpos=b,
+}
+
+%------------------------------------------------------------------------------
+% Bibliography
+%------------------------------------------------------------------------------
+% \addbibresource{references.bib}
+
+%------------------------------------------------------------------------------
+% Document Information
+%------------------------------------------------------------------------------
+\title{%
+    \textbf{Quantum Computation of QCD Colour Factors} \\[1em]
+    \Large Implementation and Verification of the Chawdhry--Pellen Algorithm \\[0.5em]
+    \large Using the QC-Amp Software Library
+}
+\author{%
+    [Your Name] \\
+    \small [Department] \\
+    \small [University] \\
+    \small \texttt{[email@university.edu]}
+}
+\date{December 2025}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\maketitle
+
+\begin{abstract}
+\noindent
+We present \texttt{QC-Amp}, a Python software library implementing the quantum algorithm of Chawdhry and Pellen for computing colour factors in Quantum Chromodynamics (QCD) scattering amplitudes. The library provides a complete implementation of the unitarisation scheme required to encode the non-unitary SU(3) generators into quantum circuits, along with verification against analytically known results. We demonstrate the successful computation of the colour factor $C = 4$ for the quark self-energy diagram, achieving exact agreement with the theoretical prediction. This work establishes a foundation for extending quantum amplitude calculations to more complex multi-parton processes relevant to high-energy physics phenomenology at the Large Hadron Collider and future colliders.
+
+\vspace{1em}
+\noindent\textbf{Keywords:} Quantum Computing, Quantum Chromodynamics, Colour Factors, Scattering Amplitudes, Qiskit, SU(3)
+\end{abstract}
+
+\tableofcontents
+
+%------------------------------------------------------------------------------
+\chapter{Introduction}
+\label{ch:introduction}
+%------------------------------------------------------------------------------
+
+\input{chapters/introduction}
+
+%------------------------------------------------------------------------------
+\chapter{Theoretical Background}
+\label{ch:theory}
+%------------------------------------------------------------------------------
+
+\input{chapters/theory}
+
+%------------------------------------------------------------------------------
+\chapter{The Chawdhry--Pellen Algorithm}
+\label{ch:algorithm}
+%------------------------------------------------------------------------------
+
+\input{chapters/algorithm}
+
+%------------------------------------------------------------------------------
+\chapter{Implementation}
+\label{ch:implementation}
+%------------------------------------------------------------------------------
+
+\input{chapters/implementation}
+
+%------------------------------------------------------------------------------
+\chapter{Results and Verification}
+\label{ch:results}
+%------------------------------------------------------------------------------
+
+\input{chapters/results}
+
+%------------------------------------------------------------------------------
+\chapter{Conclusions and Future Work}
+\label{ch:conclusions}
+%------------------------------------------------------------------------------
+
+\input{chapters/conclusions}
+
+%------------------------------------------------------------------------------
+% Appendices
+%------------------------------------------------------------------------------
+\appendix
+
+\chapter{Mathematical Details, Code Listings, and Additional Results}
+\label{app:appendices}
+
+\input{chapters/appendices}
+
+%------------------------------------------------------------------------------
+% Bibliography
+%------------------------------------------------------------------------------
+% \printbibliography[heading=bibintoc,title={References}]
+
+% Temporary manual bibliography until biblatex is configured
+% Full bibliography in references.bib
+\begin{thebibliography}{99}
+
+\bibitem{ChawdhryPellen2023}
+H.~A.~Chawdhry and M.~Pellen,
+``Quantum simulation of colour in perturbative quantum chromodynamics,''
+\textit{Phys. Rev. D}\ \textbf{108}, 094028 (2023),
+\href{https://arxiv.org/abs/2303.04818}{arXiv:2303.04818 [hep-ph]}.
+
+\bibitem{Feynman1982}
+R.~P.~Feynman,
+``Simulating physics with computers,''
+\textit{Int. J. Theor. Phys.}\ \textbf{21}, 467--488 (1982).
+
+\bibitem{Nielsen2010}
+M.~A.~Nielsen and I.~L.~Chuang,
+\textit{Quantum Computation and Quantum Information},
+10th Anniversary Edition (Cambridge University Press, 2010).
+
+\bibitem{Peskin1995}
+M.~E.~Peskin and D.~V.~Schroeder,
+\textit{An Introduction to Quantum Field Theory}
+(Westview Press, 1995).
+
+\bibitem{Ellis1996}
+R.~K.~Ellis, W.~J.~Stirling, and B.~R.~Webber,
+\textit{QCD and Collider Physics}
+(Cambridge University Press, 1996).
+
+\bibitem{Muta2010}
+T.~Muta,
+\textit{Foundations of Quantum Chromodynamics},
+3rd Edition (World Scientific, 2010).
+
+\bibitem{Georgi1999}
+H.~Georgi,
+\textit{Lie Algebras in Particle Physics},
+2nd Edition (Perseus Books, 1999).
+
+\bibitem{Qiskit2024}
+Qiskit contributors,
+``Qiskit: An Open-source Framework for Quantum Computing,''
+(2024), \url{https://qiskit.org/}.
+
+\bibitem{GellMann1962}
+M.~Gell-Mann,
+``Symmetries of Baryons and Mesons,''
+\textit{Phys. Rev.}\ \textbf{125}, 1067--1084 (1962).
+
+\bibitem{Gross1973}
+D.~J.~Gross and F.~Wilczek,
+``Ultraviolet Behavior of Non-Abelian Gauge Theories,''
+\textit{Phys. Rev. Lett.}\ \textbf{30}, 1343--1346 (1973).
+
+\bibitem{Politzer1973}
+H.~D.~Politzer,
+``Reliable Perturbative Results for Strong Interactions?''
+\textit{Phys. Rev. Lett.}\ \textbf{30}, 1346--1349 (1973).
+
+\bibitem{Jordan2012}
+S.~P.~Jordan, K.~S.~M.~Lee, and J.~Preskill,
+``Quantum Algorithms for Quantum Field Theories,''
+\textit{Science}\ \textbf{336}, 1130--1133 (2012).
+
+\bibitem{Preskill2018}
+J.~Preskill,
+``Quantum Computing in the NISQ era and beyond,''
+\textit{Quantum}\ \textbf{2}, 79 (2018).
+
+\bibitem{Bauer2023}
+C.~W.~Bauer \textit{et al.},
+``Quantum Simulation for High Energy Physics,''
+\textit{PRX Quantum}\ \textbf{4}, 027001 (2023).
+
+\bibitem{Sjodahl2012}
+M.~Sj{\"o}dahl,
+``ColorMath -- A package for color summed calculations in SU(Nc),''
+\textit{Eur. Phys. J. C}\ \textbf{73}, 2310 (2013).
+
+\bibitem{vanRitbergen1999}
+T.~van~Ritbergen, A.~N.~Schellekens, and J.~A.~M.~Vermaseren,
+``Group theory factors for Feynman diagrams,''
+\textit{Int. J. Mod. Phys. A}\ \textbf{14}, 41--96 (1999).
+
+\bibitem{numpy2020}
+C.~R.~Harris \textit{et al.},
+``Array programming with NumPy,''
+\textit{Nature}\ \textbf{585}, 357--362 (2020).
+
+\end{thebibliography}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

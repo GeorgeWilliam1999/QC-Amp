@@ -1,0 +1,169 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapter 6: Conclusions and Future Work
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Summary of Achievements}
+\label{sec:conclusions_summary}
+
+This work has presented the development and verification of \texttt{QC-Amp}, a Python software library implementing the Chawdhry--Pellen quantum algorithm for computing QCD colour factors. The main achievements are:
+
+\begin{enumerate}
+    \item \textbf{Complete Implementation}: We have implemented all components of the algorithm:
+    \begin{itemize}
+        \item SU(3) group theory utilities (Gell-Mann matrices, structure constants)
+        \item Unitary-adjusted matrices and correction coefficients
+        \item Quantum gates ($A$, $B$, $\Lambda$, $M$, $Q$, $G$)
+        \item State preparation circuits ($R_q$, $R_g$)
+        \item Complete diagram circuit builders
+        \item Colour factor extraction and verification functions
+    \end{itemize}
+    
+    \item \textbf{Rigorous Verification}: The implementation has been verified at multiple levels:
+    \begin{itemize}
+        \item Unit tests for all components
+        \item Verification of mathematical identities (Eq.~(33))
+        \item End-to-end validation against the analytic colour factor $C = 4$
+    \end{itemize}
+    
+    \item \textbf{Documentation}: Comprehensive documentation has been provided:
+    \begin{itemize}
+        \item Detailed theoretical background
+        \item Step-by-step algorithm description
+        \item Code documentation with examples
+        \item This technical report / thesis chapter
+    \end{itemize}
+    
+    \item \textbf{Reproducibility}: The code is structured for reproducibility and extension:
+    \begin{itemize}
+        \item Modular design with clear separation of concerns
+        \item Comprehensive test suite
+        \item Example notebooks
+        \item Open-source release
+    \end{itemize}
+\end{enumerate}
+
+
+\section{Limitations}
+\label{sec:conclusions_limitations}
+
+The current implementation has several limitations that should be acknowledged:
+
+\subsection{Algorithmic Limitations}
+\label{subsec:algo_limitations}
+
+\begin{enumerate}
+    \item \textbf{Simulator-only execution}: All computations have been performed on classical simulators (Qiskit Statevector). Execution on actual quantum hardware has not been attempted.
+    
+    \item \textbf{Limited diagram complexity}: Only the simplest non-trivial diagram (quark self-energy with two vertices) has been fully verified.
+    
+    \item \textbf{No error mitigation}: The implementation does not include quantum error correction or mitigation techniques that would be necessary for noisy quantum hardware.
+\end{enumerate}
+
+\subsection{Implementation Limitations}
+\label{subsec:impl_limitations}
+
+\begin{enumerate}
+    \item \textbf{Gate decomposition}: The high-level gates ($Q$, $G$) have not been decomposed into native gate sets for specific quantum hardware.
+    
+    \item \textbf{Circuit optimisation}: No circuit optimisation techniques (e.g., gate cancellation, qubit routing) have been applied.
+    
+    \item \textbf{Scalability}: The exponential growth of the state vector limits classical simulation to $\sim 30$ qubits.
+\end{enumerate}
+
+
+\section{Future Work}
+\label{sec:conclusions_future}
+
+Several directions for future research emerge from this work:
+
+\subsection{Extension to More Complex Diagrams}
+\label{subsec:future_diagrams}
+
+\begin{enumerate}
+    \item \textbf{Multi-gluon diagrams}: Extend to diagrams with multiple gluon exchanges, testing the $G$ gate implementation for triple-gluon vertices.
+    
+    \item \textbf{Loop diagrams}: Implement circuits for loop diagrams with closed quark loops, which require trace operations.
+    
+    \item \textbf{Multi-parton amplitudes}: Scale up to physically relevant processes like $gg \to gg$, $q\bar{q} \to gg$, and beyond.
+\end{enumerate}
+
+\subsection{Hardware Execution}
+\label{subsec:future_hardware}
+
+\begin{enumerate}
+    \item \textbf{Gate decomposition}: Transpile circuits to native gate sets (e.g., IBM's basis gates: CX, ID, RZ, SX, X).
+    
+    \item \textbf{Noise analysis}: Study the impact of gate errors, decoherence, and measurement noise on colour factor accuracy.
+    
+    \item \textbf{Error mitigation}: Implement error mitigation techniques (zero-noise extrapolation, probabilistic error cancellation, etc.).
+    
+    \item \textbf{Hardware demonstration}: Execute the quark self-energy circuit on real quantum hardware and compare with simulator results.
+\end{enumerate}
+
+\subsection{Algorithmic Improvements}
+\label{subsec:future_algorithm}
+
+\begin{enumerate}
+    \item \textbf{Alternative unitarisation schemes}: Explore other approaches to implementing non-unitary operations (e.g., block-encoding, linear combinations of unitaries).
+    
+    \item \textbf{Variational approaches}: Investigate variational quantum algorithms for colour factor estimation.
+    
+    \item \textbf{Amplitude estimation}: Use quantum amplitude estimation to extract colour factors with provable speedup.
+\end{enumerate}
+
+\subsection{Integration with Phenomenology}
+\label{subsec:future_pheno}
+
+\begin{enumerate}
+    \item \textbf{Full amplitude computation}: Combine colour factors with kinematic integrals for complete amplitude calculations.
+    
+    \item \textbf{Cross-section computation}: Integrate with Monte Carlo generators for cross-section predictions.
+    
+    \item \textbf{Comparison with existing tools}: Benchmark against established colour algebra packages (e.g., ColorMath, ColorFull).
+\end{enumerate}
+
+
+\section{Broader Impact}
+\label{sec:conclusions_impact}
+
+\subsection{Scientific Impact}
+\label{subsec:impact_scientific}
+
+This work contributes to the growing field of quantum simulation of quantum field theories. By providing a verified, open-source implementation of a specific quantum algorithm for QCD, we:
+
+\begin{itemize}
+    \item Lower the barrier to entry for researchers interested in quantum approaches to particle physics
+    \item Provide a testbed for algorithmic improvements and hardware benchmarking
+    \item Contribute to the body of evidence that quantum computers can address problems in high-energy physics
+\end{itemize}
+
+\subsection{Educational Impact}
+\label{subsec:impact_educational}
+
+The \texttt{QC-Amp} library and associated documentation serve an educational purpose:
+
+\begin{itemize}
+    \item Illustrating the connection between group theory, quantum field theory, and quantum computing
+    \item Providing concrete examples of quantum circuit design for physics applications
+    \item Demonstrating best practices for scientific software development
+\end{itemize}
+
+
+\section{Concluding Remarks}
+\label{sec:conclusions_remarks}
+
+The successful implementation and verification of the Chawdhry--Pellen algorithm demonstrates that quantum computers can, in principle, compute QCD colour factors. While current quantum hardware is not yet capable of outperforming classical methods for these calculations, the rapid progress in quantum technology suggests that quantum advantage may be achievable in the future for sufficiently complex processes.
+
+The \texttt{QC-Amp} library provides a foundation for this future development. As quantum hardware improves, the same algorithmic framework can be deployed on increasingly powerful devices, potentially enabling colour factor computations for processes that are intractable classically.
+
+This work represents a small but meaningful step toward the long-term goal of simulating the full complexity of quantum field theories on quantum computers---a vision first articulated by Feynman over four decades ago~\cite{Feynman1982}.
+
+\begin{center}
+\rule{0.5\textwidth}{0.4pt}
+\end{center}
+
+\begin{quote}
+\textit{``Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical.''}
+
+\hfill -- Richard P. Feynman, 1982
+\end{quote}

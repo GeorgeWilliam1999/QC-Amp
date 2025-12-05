@@ -1,0 +1,393 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapter 3: The Chawdhry-Pellen Algorithm
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Overview of the Algorithm}
+\label{sec:algo_overview}
+
+The Chawdhry--Pellen algorithm~\cite{ChawdhryPellen2023} provides a method to compute QCD colour factors using quantum circuits. The algorithm addresses the fundamental challenge that the SU(3) generators are Hermitian but not unitary, making them incompatible with direct quantum gate implementation.
+
+The key components of the algorithm are:
+
+\begin{enumerate}
+    \item \textbf{Unitary-adjusted matrices} $\lhat{a}$: Modified versions of the Gell-Mann matrices that are unitary.
+    
+    \item \textbf{Correction coefficients} $\mu(a, i)$: Scalar factors that encode the deviation between $\lhat{a}$ and $\generator{a}$.
+    
+    \item \textbf{Unitarisation register} $U$: An ancillary qubit register that stores the product of correction coefficients as an amplitude.
+    
+    \item \textbf{Quantum gates} $A$, $B$, $M$, $\Lambda$, $Q$: The building blocks for constructing circuits representing Feynman diagrams.
+\end{enumerate}
+
+The colour factor is extracted from the overlap between the final quantum state and the all-zero reference state, multiplied by an appropriate normalisation factor.
+
+
+\section{Unitary-Adjusted Matrices}
+\label{sec:algo_unitary_adjusted}
+
+\subsection{Construction Principle}
+\label{subsec:adjusted_construction}
+
+The unitary-adjusted matrices $\lhat{a}$ are constructed to satisfy two requirements:
+
+\begin{enumerate}
+    \item \textbf{Unitarity}: $(\lhat{a})^\dagger \lhat{a} = \mathbb{1}$ for all $a \in \{1, \ldots, 8\}$.
+    
+    \item \textbf{Partial agreement with $\gellmann{a}$}: For each quark colour state $\ket{i}$, the action of $\lhat{a}$ should be ``close'' to that of $\gellmann{a}$ in a sense made precise below.
+\end{enumerate}
+
+The construction proceeds by examining each Gell-Mann matrix and identifying which rows can be preserved while completing the matrix to be unitary.
+
+\subsection{Explicit Construction}
+\label{subsec:adjusted_explicit}
+
+For the off-diagonal Gell-Mann matrices ($a = 1, 2, 4, 5, 6, 7$), the unitary adjustment involves adding identity elements where the original matrix has zeros. For example:
+
+\begin{equation}
+    \gellmann{1} = \begin{pmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix}
+    \quad \longrightarrow \quad
+    \lhat{1} = \begin{pmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{pmatrix}.
+    \label{eq:lambda1_adjusted}
+\end{equation}
+
+The matrix $\lhat{1}$ is unitary (it permutes the basis states $\ket{1} \leftrightarrow \ket{2}$ and leaves $\ket{3}$ invariant), and it agrees with $\gellmann{1}$ on rows 1 and 2.
+
+For the diagonal matrix $\gellmann{8}$, which has three distinct eigenvalues on the diagonal, no simple modification can make it unitary while preserving its action. The solution is to set
+\begin{equation}
+    \lhat{8} = \mathbb{1},
+    \label{eq:lambda8_adjusted}
+\end{equation}
+i.e., the identity matrix. The deviation from $\gellmann{8}$ is then entirely captured by the correction coefficients $\mu(8, i)$.
+
+The complete set of unitary-adjusted matrices is given in Appendix~\ref{app:matrices}.
+
+\subsection{Verification of Unitarity}
+\label{subsec:adjusted_verification}
+
+Each unitary-adjusted matrix satisfies
+\begin{equation}
+    (\lhat{a})^\dagger \lhat{a} = \mathbb{1} \quad \text{and} \quad |\det(\lhat{a})| = 1.
+    \label{eq:adjusted_unitary}
+\end{equation}
+
+This has been verified numerically in the \texttt{QC-Amp} implementation; see Chapter~\ref{ch:implementation} for details.
+
+
+\section{The Correction Coefficients \texorpdfstring{$\mu(a, i)$}{μ(a,i)}}
+\label{sec:algo_mu}
+
+\subsection{Definition}
+\label{subsec:mu_definition}
+
+The correction coefficient $\mu(a, i)$ is defined implicitly by the requirement
+\begin{equation}
+    \mu(a, i) \, \lhat{a} \ket{i} = \generator{a} \ket{i} = \frac{1}{2} \gellmann{a} \ket{i},
+    \label{eq:mu_definition}
+\end{equation}
+where $\ket{i}$ denotes the quark colour state with $i \in \{1, 2, 3\}$.
+
+\begin{remark}
+Equation~\eqref{eq:mu_definition} is Eq.~(33) in Ref.~\cite{ChawdhryPellen2023}. It states that the non-unitary action of $\generator{a}$ on $\ket{i}$ can be recovered from the unitary action of $\lhat{a}$ by multiplying by the scalar $\mu(a, i)$.
+\end{remark}
+
+\subsection{Calculation of \texorpdfstring{$\mu(a, i)$}{μ(a,i)}}
+\label{subsec:mu_calculation}
+
+For each pair $(a, i)$, the coefficient $\mu(a, i)$ is computed as follows:
+
+\begin{enumerate}
+    \item Compute the $i$-th row of $\lhat{a}$: this gives $\lhat{a} \ket{i}$.
+    \item Compute the $i$-th row of $\gellmann{a}$: this gives $\gellmann{a} \ket{i}$.
+    \item If these rows are proportional, then $\mu(a, i)$ is the proportionality constant (divided by 2 for the $T^a = \lambda^a / 2$ normalisation).
+    \item If the rows are not proportional (which can happen for some combinations), the formula for $\mu$ must be adjusted accordingly.
+\end{enumerate}
+
+In practice, the implementation uses the following logic:
+\begin{itemize}
+    \item If row $i$ of $\lhat{a}$ equals row $i$ of $\gellmann{a}$, then $\mu(a, i) = 1/2$ (the standard generator normalisation).
+    \item If they differ, $\mu(a, i)$ is computed from the diagonal element of $\gellmann{a}$.
+\end{itemize}
+
+\subsection{Bound on \texorpdfstring{$|\mu(a, i)|$}{|μ(a,i)|}}
+\label{subsec:mu_bound}
+
+A crucial property is that
+\begin{equation}
+    |\mu(a, i)| \leq 1 \quad \text{for all valid } (a, i).
+    \label{eq:mu_bound}
+\end{equation}
+
+This bound is essential because $\mu(a, i)$ will be encoded as an amplitude in the unitarisation register, and quantum amplitudes are bounded by 1 in magnitude. The bound can be verified by explicit calculation for all 24 pairs $(a, i)$ with $a \in \{1, \ldots, 8\}$ and $i \in \{1, 2, 3\}$.
+
+
+\section{The Unitarisation Register}
+\label{sec:algo_unitarisation_register}
+
+\subsection{Purpose}
+\label{subsec:u_purpose}
+
+The unitarisation register $U$ is an ancillary quantum register that serves to encode the product of correction coefficients $\mu(a, i)$ encountered along a diagram. Its key properties are:
+
+\begin{enumerate}
+    \item It starts in the state $\ket{0}^{\otimes N_U}$, where $N_U$ is the number of qubits.
+    \item Each interaction vertex increments a ``counter'' in the register (via the $A$ gate).
+    \item Each vertex also applies a controlled rotation (via the $B$ gate) that encodes $\mu(a, i)$ into the amplitude of the $\ket{0 \cdots 0}$ subspace.
+    \item The final colour factor is extracted from the amplitude of returning to $\ket{0 \cdots 0}$ at the end.
+\end{enumerate}
+
+\subsection{Register Size}
+\label{subsec:u_size}
+
+For a diagram with $n_v$ vertices, the unitarisation register requires
+\begin{equation}
+    N_U = \lceil \log_2(n_v) \rceil + 1
+    \label{eq:u_size}
+\end{equation}
+qubits. This ensures enough states to track each vertex's contribution.
+
+For the quark self-energy diagram with $n_v = 2$ vertices:
+\begin{equation}
+    N_U = \lceil \log_2(2) \rceil + 1 = 1 + 1 = 2.
+    \label{eq:u_size_example}
+\end{equation}
+
+In practice, we often use $N_U = 3$ to provide additional headroom.
+
+
+\section{The Quantum Gates}
+\label{sec:algo_gates}
+
+\subsection{The A Gate: Increment Operator}
+\label{subsec:a_gate}
+
+The $A$ gate implements a cyclic increment on the unitarisation register:
+\begin{equation}
+    A \ket{k}_U = \ket{k + 1 \mod 2^{N_U}}_U.
+    \label{eq:a_gate}
+\end{equation}
+
+This is implemented as a ripple-carry adder using a cascade of multi-controlled X gates:
+\begin{equation}
+    A = X_0 \cdot \mathrm{CX}_{0,1} \cdot \mathrm{CCX}_{0,1,2} \cdot \ldots
+    \label{eq:a_gate_impl}
+\end{equation}
+
+The $A$ gate is applied at each vertex to ``reserve space'' for that vertex's contribution in the unitarisation register.
+
+\subsection{The B Gate: Amplitude Transfer}
+\label{subsec:b_gate}
+
+The $B$ gate transfers a coefficient $\alpha$ into the amplitude structure of the unitarisation register. It consists of two components:
+
+\subsubsection{The $B_1$ Gate}
+
+The single-qubit $B_1(\alpha)$ gate is defined by the $2 \times 2$ unitary matrix
+\begin{equation}
+    B_1(\alpha) = \begin{pmatrix}
+        \sqrt{1 - |\alpha|^2} & \alpha \\
+        -\alpha^* & \sqrt{1 - |\alpha|^2}
+    \end{pmatrix}.
+    \label{eq:b1_gate}
+\end{equation}
+
+Acting on $\ket{0}$:
+\begin{equation}
+    B_1(\alpha) \ket{0} = \sqrt{1 - |\alpha|^2} \ket{0} + \alpha \ket{1}.
+    \label{eq:b1_action}
+\end{equation}
+
+This encodes $\alpha$ as the amplitude of the $\ket{1}$ state. Importantly, the $\ket{0}$ amplitude becomes $\sqrt{1 - |\alpha|^2}$, which approaches 1 as $|\alpha| \to 0$.
+
+\subsubsection{The Full $B$ Gate}
+
+The full $B(\alpha)$ gate applies $B_1(\alpha)$ to the first qubit of the unitarisation register, \textbf{controlled on all other qubits being in $\ket{0}$}:
+\begin{equation}
+    B(\alpha) = \sum_{k \neq 0} \ket{k}\bra{k} \otimes \mathbb{1} + \ket{0\cdots 0}\bra{0\cdots 0} \otimes B_1(\alpha).
+    \label{eq:b_gate_full}
+\end{equation}
+
+This ensures that the amplitude transfer only affects the ``active'' part of the unitarisation space.
+
+\subsection{The \texorpdfstring{$\Lambda$}{Λ} Gate: Colour Rotation}
+\label{subsec:lambda_gate}
+
+The $\Lambda$ (Lambda) gate applies the unitary-adjusted matrix $\lhat{a}$ to the quark register, \textbf{controlled by the gluon register}:
+\begin{equation}
+    \Lambda = \sum_{a=1}^{8} \ket{a-1}\!\bra{a-1}_{g} \otimes (\lhat{a})_{q}.
+    \label{eq:lambda_gate}
+\end{equation}
+
+In circuit terms, this is implemented as 8 controlled unitaries, each conditioned on a different gluon basis state:
+\begin{equation}
+    \Lambda = \prod_{a=1}^{8} C_{|a-1\rangle_g}[\lhat{a}].
+    \label{eq:lambda_gate_impl}
+\end{equation}
+
+\subsection{The M Gate: Correction Operator}
+\label{subsec:m_gate}
+
+The $M$ gate applies controlled $B(\mu(a,i))$ operations for each gluon-quark colour pair:
+\begin{equation}
+    M = \prod_{a=1}^{8} \prod_{i=1}^{3} C_{|a-1\rangle_g |i-1\rangle_q}[B(\mu(a, i))].
+    \label{eq:m_gate}
+\end{equation}
+
+This encodes all the correction coefficients into the unitarisation register. The controls ensure that the appropriate $\mu(a, i)$ is applied only when the gluon is in colour state $a$ and the quark is in colour state $i$.
+
+\begin{remark}
+The control state encoding is critical for correctness. In our implementation, the control qubits are ordered as $[\text{gluon}] + [\text{quark}]$, and the control state integer is computed as
+\begin{equation}
+    \text{ctrl\_state} = (a - 1) + 8 \cdot (i - 1).
+    \label{eq:ctrl_state}
+\end{equation}
+\end{remark}
+
+\subsection{The Q Gate: Complete Quark-Gluon Vertex}
+\label{subsec:q_gate}
+
+The $Q$ gate represents a complete quark-gluon interaction vertex. It combines all the components:
+\begin{equation}
+    Q = (\Lambda \otimes \mathbb{1}_U) \cdot M \cdot (\mathbb{1}_g \otimes \mathbb{1}_q \otimes A).
+    \label{eq:q_gate}
+\end{equation}
+
+The order of operations (right to left) is:
+\begin{enumerate}
+    \item $A$: Increment the unitarisation register.
+    \item $M$: Apply correction coefficients based on current gluon and quark colours.
+    \item $\Lambda$: Rotate the quark colour based on the gluon colour.
+\end{enumerate}
+
+This ordering ensures that:
+\begin{itemize}
+    \item The $A$ gate reserves space for this vertex's contribution.
+    \item The $M$ gate records $\mu(a, i)$ \textbf{before} the colour rotation changes $i$.
+    \item The $\Lambda$ gate then performs the actual colour transformation.
+\end{itemize}
+
+
+\section{State Preparation}
+\label{sec:algo_preparation}
+
+\subsection{Quark-Antiquark Singlet State}
+\label{subsec:quark_prep}
+
+For external quark lines, we prepare a colour-singlet-like state representing the colour structure of a quark propagator. The preparation operator $R_q$ maps:
+\begin{equation}
+    R_q: \ket{00}_q \ket{00}_{\bar{q}} \mapsto \frac{1}{\sqrt{3}} \sum_{k=1}^{3} \ket{k}_q \ket{k}_{\bar{q}}.
+    \label{eq:quark_prep}
+\end{equation}
+
+This entangled state ensures that the quark and antiquark always have the same colour, which is the correct colour structure for a quark propagator connecting two vertices.
+
+The preparation circuit consists of:
+\begin{enumerate}
+    \item An $R$ gate on the quark register, creating the superposition $\frac{1}{\sqrt{3}}(\ket{00} + \ket{01} + \ket{10})$.
+    \item CNOT gates entangling the antiquark register with the quark register.
+\end{enumerate}
+
+\subsection{Gluon Superposition State}
+\label{subsec:gluon_prep}
+
+For gluon lines, we prepare an equal superposition over all 8 colours:
+\begin{equation}
+    R_g: \ket{000}_g \mapsto \frac{1}{\sqrt{8}} \sum_{a=1}^{8} \ket{a-1}_g.
+    \label{eq:gluon_prep}
+\end{equation}
+
+This is simply implemented by applying Hadamard gates to all three qubits:
+\begin{equation}
+    R_g = H^{\otimes 3}.
+    \label{eq:gluon_prep_impl}
+\end{equation}
+
+
+\section{Colour Factor Extraction}
+\label{sec:algo_extraction}
+
+\subsection{The Complete Circuit}
+\label{subsec:complete_circuit}
+
+For a diagram with preparation, interaction vertices, and inverse preparation, the complete circuit structure is:
+\begin{equation}
+    \mathcal{C} = R_g^\dagger \otimes R_q^\dagger \cdot \left( \prod_{v=1}^{n_v} Q_v \right) \cdot R_g \otimes R_q.
+    \label{eq:complete_circuit}
+\end{equation}
+
+For the quark self-energy diagram with two vertices:
+\begin{equation}
+    \mathcal{C}_{\text{self-energy}} = R_g^\dagger \otimes R_q^\dagger \cdot Q \cdot Q \cdot R_g \otimes R_q.
+    \label{eq:self_energy_circuit}
+\end{equation}
+
+\subsection{Overlap Measurement}
+\label{subsec:overlap}
+
+The colour factor is extracted from the overlap of the final state with the all-zero reference state:
+\begin{equation}
+    \braket{\Omega}{\psi_{\text{final}}} = \bra{0}^{\otimes n} \mathcal{C} \ket{0}^{\otimes n},
+    \label{eq:overlap}
+\end{equation}
+where $n$ is the total number of qubits.
+
+\subsection{Normalisation Factor}
+\label{subsec:normalisation}
+
+The colour factor is related to the overlap by
+\begin{equation}
+    C = N \cdot \braket{\Omega}{\psi_{\text{final}}},
+    \label{eq:colour_factor_formula}
+\end{equation}
+where the normalisation factor is
+\begin{equation}
+    N = \Nc^{\Nq} \cdot (\Nc^2 - 1)^{\Ng}.
+    \label{eq:normalisation}
+\end{equation}
+
+For the quark self-energy diagram ($\Nq = 1$, $\Ng = 1$, $\Nc = 3$):
+\begin{equation}
+    N = 3^1 \cdot (3^2 - 1)^1 = 3 \cdot 8 = 24.
+    \label{eq:normalisation_self_energy}
+\end{equation}
+
+Therefore, the expected overlap for $C = 4$ is
+\begin{equation}
+    \braket{\Omega}{\psi_{\text{final}}} = \frac{C}{N} = \frac{4}{24} = \frac{1}{6} \approx 0.1667.
+    \label{eq:expected_overlap}
+\end{equation}
+
+
+\section{Algorithm Summary}
+\label{sec:algo_summary}
+
+\begin{algorithm}[htbp]
+\caption{Chawdhry--Pellen Colour Factor Computation}
+\label{alg:colour_factor}
+\begin{algorithmic}[1]
+\Require Feynman diagram $\mathcal{D}$ with $\Nq$ quark lines and $\Ng$ gluon lines
+\Ensure Colour factor $C$
+
+\State Initialise quantum registers: gluon ($g$), quark ($q$), antiquark ($\bar{q}$), unitarisation ($U$)
+\State Prepare initial state: $\ket{\psi_0} = \ket{0}^{\otimes n}$
+
+\State \textbf{Preparation phase:}
+\State \hspace{1em} Apply $R_g$ to gluon register
+\State \hspace{1em} Apply $R_q$ to quark and antiquark registers
+
+\State \textbf{Interaction phase:}
+\For{each vertex $v$ in $\mathcal{D}$}
+    \State Apply $Q$ gate to $(g, q, U)$ registers
+\EndFor
+
+\State \textbf{Inverse preparation phase:}
+\State \hspace{1em} Apply $R_q^\dagger$ to quark and antiquark registers
+\State \hspace{1em} Apply $R_g^\dagger$ to gluon register
+
+\State \textbf{Extraction phase:}
+\State Compute overlap: $\braket{\Omega}{\psi_{\text{final}}} = \bra{0}^{\otimes n} \psi_{\text{final}}$
+\State Compute normalisation: $N = \Nc^{\Nq} \cdot (\Nc^2 - 1)^{\Ng}$
+\State \Return $C = N \cdot \braket{\Omega}{\psi_{\text{final}}}$
+\end{algorithmic}
+\end{algorithm}
+
+The algorithm has polynomial complexity in the number of vertices and colour states, making it efficient for diagrams with a moderate number of partons. The main computational cost is in the controlled operations of the $M$ gate, which scales as $O(8 \times 3) = O(24)$ controlled gates per vertex.

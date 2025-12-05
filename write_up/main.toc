@@ -1,0 +1,150 @@
+\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Motivation and Context}{5}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Objectives of This Work}{5}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Structure of This Document}{6}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Notation and Conventions}{6}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Acknowledgements}{7}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Theoretical Background}{8}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Quantum Chromodynamics}{8}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}The QCD Lagrangian}{8}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Colour Confinement and Asymptotic Freedom}{9}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}The SU(3) Colour Group}{9}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Definition and Properties}{9}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}The Lie Algebra $\mathfrak {su}(3)$}{9}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}The Gell-Mann Matrices}{10}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Definition}{10}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Properties of the Gell-Mann Matrices}{10}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}SU(3) Generators in the Fundamental Representation}{11}{subsection.2.3.3}%
+\contentsline {section}{\numberline {2.4}Colour Factors in Feynman Diagrams}{11}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Feynman Rules for Colour}{11}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Definition of Colour Factor}{11}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Example: Quark Self-Energy}{12}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Casimir Invariants}{12}{subsection.2.4.4}%
+\contentsline {section}{\numberline {2.5}Qubit Encoding of Colour States}{13}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}The Encoding Challenge}{13}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Quark Colour Encoding}{13}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}Gluon Colour Encoding}{13}{subsection.2.5.3}%
+\contentsline {section}{\numberline {2.6}The Unitarisation Problem}{13}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Non-Unitarity of Generators}{13}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}The Chawdhry--Pellen Solution}{14}{subsection.2.6.2}%
+\contentsline {chapter}{\numberline {3}The Chawdhry--Pellen Algorithm}{15}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Overview of the Algorithm}{15}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Unitary-Adjusted Matrices}{15}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Construction Principle}{15}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Explicit Construction}{16}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Verification of Unitarity}{16}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}The Correction Coefficients $\mu (a, i)$}{16}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Definition}{16}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Calculation of $\mu (a, i)$}{16}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Bound on $|\mu (a, i)|$}{17}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}The Unitarisation Register}{17}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Purpose}{17}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Register Size}{17}{subsection.3.4.2}%
+\contentsline {section}{\numberline {3.5}The Quantum Gates}{18}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}The A Gate: Increment Operator}{18}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}The B Gate: Amplitude Transfer}{18}{subsection.3.5.2}%
+\contentsline {subsubsection}{The $B_1$ Gate}{18}{section*.3}%
+\contentsline {subsubsection}{The Full $B$ Gate}{18}{section*.4}%
+\contentsline {subsection}{\numberline {3.5.3}The $\Lambda $ Gate: Colour Rotation}{18}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}The M Gate: Correction Operator}{19}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.5.5}The Q Gate: Complete Quark-Gluon Vertex}{19}{subsection.3.5.5}%
+\contentsline {section}{\numberline {3.6}State Preparation}{19}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Quark-Antiquark Singlet State}{19}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Gluon Superposition State}{20}{subsection.3.6.2}%
+\contentsline {section}{\numberline {3.7}Colour Factor Extraction}{20}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}The Complete Circuit}{20}{subsection.3.7.1}%
+\contentsline {subsection}{\numberline {3.7.2}Overlap Measurement}{20}{subsection.3.7.2}%
+\contentsline {subsection}{\numberline {3.7.3}Normalisation Factor}{20}{subsection.3.7.3}%
+\contentsline {section}{\numberline {3.8}Algorithm Summary}{21}{section.3.8}%
+\contentsline {chapter}{\numberline {4}Implementation}{22}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Software Architecture}{22}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Overview}{22}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Directory Structure}{22}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Dependencies}{23}{subsection.4.1.3}%
+\contentsline {section}{\numberline {4.2}Module: \texttt {su3.py}}{23}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Purpose}{23}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Gell-Mann Matrices}{23}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Unitary-Adjusted Matrices}{24}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Matrix Expansion}{24}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}Structure Constants}{24}{subsection.4.2.5}%
+\contentsline {section}{\numberline {4.3}Module: \texttt {gates.py}}{25}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}The R Gate}{25}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}The A Gate}{25}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}The B Gate}{26}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}The $\mu $ Coefficient}{26}{subsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.3.5}The $\Lambda $ Gate}{27}{subsection.4.3.5}%
+\contentsline {subsection}{\numberline {4.3.6}The M Gate}{27}{subsection.4.3.6}%
+\contentsline {subsection}{\numberline {4.3.7}The Q Gate}{28}{subsection.4.3.7}%
+\contentsline {section}{\numberline {4.4}Module: \texttt {circuits.py}}{28}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Quark-Antiquark Preparation}{28}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Gluon Preparation}{29}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Quark Emission-Absorption Circuit}{29}{subsection.4.4.3}%
+\contentsline {section}{\numberline {4.5}Module: \texttt {colour\_factors.py}}{30}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Colour Factor Computation}{30}{subsection.4.5.1}%
+\contentsline {section}{\numberline {4.6}Testing}{30}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Test Suite Overview}{30}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Key Test Cases}{31}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}Running Tests}{31}{subsection.4.6.3}%
+\contentsline {chapter}{\numberline {5}Results and Verification}{32}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Verification Strategy}{32}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Verification of SU(3) Data}{32}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Gell-Mann Matrix Properties}{32}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Trace Orthonormality}{32}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Unitary-Adjusted Matrix Properties}{33}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3}Verification of Equation (33)}{33}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Analytic Verification of Colour Factor}{34}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Direct Calculation}{34}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Numerical Verification}{34}{subsection.5.4.2}%
+\contentsline {section}{\numberline {5.5}Quantum Circuit Results}{35}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Circuit Construction}{35}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Circuit Statistics}{35}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}Colour Factor Computation}{35}{subsection.5.5.3}%
+\contentsline {subsection}{\numberline {5.5.4}Results}{36}{subsection.5.5.4}%
+\contentsline {section}{\numberline {5.6}Error Analysis}{36}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Numerical Precision}{36}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Error Bounds}{37}{subsection.5.6.2}%
+\contentsline {section}{\numberline {5.7}Discussion}{37}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}Key Findings}{37}{subsection.5.7.1}%
+\contentsline {subsection}{\numberline {5.7.2}Significance}{37}{subsection.5.7.2}%
+\contentsline {subsection}{\numberline {5.7.3}Comparison with Previous Work}{38}{subsection.5.7.3}%
+\contentsline {section}{\numberline {5.8}Table 1 Diagrams}{38}{section.5.8}%
+\contentsline {subsection}{\numberline {5.8.1}Diagram Catalogue}{38}{subsection.5.8.1}%
+\contentsline {subsection}{\numberline {5.8.2}Diagram Properties}{38}{subsection.5.8.2}%
+\contentsline {subsection}{\numberline {5.8.3}D1: Quark Self-Energy (Verified)}{38}{subsection.5.8.3}%
+\contentsline {subsection}{\numberline {5.8.4}D2 and D3: Future Work}{39}{subsection.5.8.4}%
+\contentsline {section}{\numberline {5.9}Summary}{39}{section.5.9}%
+\contentsline {chapter}{\numberline {6}Conclusions and Future Work}{40}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Summary of Achievements}{40}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Limitations}{41}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Algorithmic Limitations}{41}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Implementation Limitations}{41}{subsection.6.2.2}%
+\contentsline {section}{\numberline {6.3}Future Work}{41}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Extension to More Complex Diagrams}{41}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Hardware Execution}{41}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}Algorithmic Improvements}{42}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.3.4}Integration with Phenomenology}{42}{subsection.6.3.4}%
+\contentsline {section}{\numberline {6.4}Broader Impact}{42}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Scientific Impact}{42}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}Educational Impact}{42}{subsection.6.4.2}%
+\contentsline {section}{\numberline {6.5}Concluding Remarks}{43}{section.6.5}%
+\contentsline {chapter}{\numberline {A}Mathematical Details, Code Listings, and Additional Results}{44}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Complete Derivations}{44}{section.A.1}%
+\contentsline {subsection}{\numberline {A.1.1}SU(3) Algebra Relations}{44}{subsection.A.1.1}%
+\contentsline {subsubsection}{Non-zero Structure Constants}{44}{section*.15}%
+\contentsline {subsubsection}{Gell-Mann Matrix Trace Relations}{45}{section*.16}%
+\contentsline {subsection}{\numberline {A.1.2}Colour Factor Derivation for Quark Self-Energy}{45}{subsection.A.1.2}%
+\contentsline {subsection}{\numberline {A.1.3}Unitarisation Coefficient Derivation}{45}{subsection.A.1.3}%
+\contentsline {section}{\numberline {A.2}Code Listings}{46}{section.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}Complete Gell-Mann Matrix Definitions}{46}{subsection.A.2.1}%
+\contentsline {subsection}{\numberline {A.2.2}Q Gate Implementation}{47}{subsection.A.2.2}%
+\contentsline {subsection}{\numberline {A.2.3}Colour Factor Extraction}{48}{subsection.A.2.3}%
+\contentsline {section}{\numberline {A.3}Test Suite Summary}{48}{section.A.3}%
+\contentsline {subsection}{\numberline {A.3.1}SU(3) Module Tests}{48}{subsection.A.3.1}%
+\contentsline {subsection}{\numberline {A.3.2}Gates Module Tests}{49}{subsection.A.3.2}%
+\contentsline {subsection}{\numberline {A.3.3}Integration Tests}{49}{subsection.A.3.3}%
+\contentsline {section}{\numberline {A.4}Full Circuit Diagrams}{50}{section.A.4}%
+\contentsline {subsection}{\numberline {A.4.1}Figure 1 Circuit (Quark Self-Energy)}{50}{subsection.A.4.1}%
+\contentsline {subsection}{\numberline {A.4.2}Circuit Legend}{50}{subsection.A.4.2}%
+\contentsline {section}{\numberline {A.5}Complete Numerical Results}{50}{section.A.5}%
+\contentsline {subsection}{\numberline {A.5.1}Statevector Components}{50}{subsection.A.5.1}%
+\contentsline {subsection}{\numberline {A.5.2}Intermediate State Evolution}{50}{subsection.A.5.2}%

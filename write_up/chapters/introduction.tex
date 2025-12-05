@@ -1,0 +1,85 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapter 1: Introduction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Motivation and Context}
+\label{sec:intro_motivation}
+
+The computation of scattering amplitudes in Quantum Chromodynamics (QCD) lies at the heart of precision physics at hadron colliders. Every process involving strongly interacting particles---from the production of top quarks to the search for physics beyond the Standard Model---requires accurate theoretical predictions that can be compared against experimental measurements. These predictions rely fundamentally on the calculation of Feynman diagrams, which encode both the kinematic structure of particle interactions and their associated colour factors.
+
+Colour factors arise from the non-Abelian gauge structure of QCD. Unlike Quantum Electrodynamics (QED), where the photon carries no electric charge, gluons in QCD carry colour charge and can interact with themselves. This self-interaction dramatically complicates the group-theoretic structure of scattering amplitudes, as each Feynman diagram involves products of SU(3) generators $T^a$ that must be contracted and traced over internal colour indices.
+
+For simple diagrams, colour factors can be computed analytically using standard trace identities. However, as the number of external partons increases and loop corrections are included, the combinatorial complexity grows rapidly. Modern next-to-next-to-leading order (NNLO) calculations for processes like $gg \to HH$ (double Higgs production) or $pp \to t\bar{t}t\bar{t}$ (four-top production) involve thousands of Feynman diagrams, each with its own colour structure.
+
+The advent of quantum computing opens a new avenue for tackling such calculations. Quantum computers are naturally suited to simulating quantum systems, and scattering amplitudes are intrinsically quantum mechanical objects. The seminal work of Feynman~\cite{Feynman1982} and subsequent developments~\cite{Jordan2012} have established the theoretical framework for simulating quantum field theories on quantum hardware.
+
+In this context, Chawdhry and Pellen~\cite{ChawdhryPellen2023} recently proposed a quantum algorithm specifically designed to compute QCD colour factors. Their approach leverages the ability of quantum circuits to efficiently represent and manipulate superpositions over colour states, potentially offering advantages for complex multi-parton processes.
+
+\section{Objectives of This Work}
+\label{sec:intro_objectives}
+
+The primary objectives of this work are:
+
+\begin{enumerate}
+    \item \textbf{Implementation}: Develop a complete, well-documented software library (\texttt{QC-Amp}) implementing the Chawdhry--Pellen algorithm for colour factor computation.
+    
+    \item \textbf{Verification}: Validate the implementation against analytically known results, beginning with the simplest non-trivial case: the quark self-energy diagram with colour factor $C = 4$.
+    
+    \item \textbf{Documentation}: Provide comprehensive documentation of both the theoretical framework and the software architecture, suitable for use in further research and teaching.
+    
+    \item \textbf{Extension}: Establish the foundation for computing colour factors of more complex diagrams, including those with multiple gluon exchanges and triple-gluon vertices.
+\end{enumerate}
+
+\section{Structure of This Document}
+\label{sec:intro_structure}
+
+This document is organised as follows:
+
+\textbf{Chapter~\ref{ch:theory}} provides the theoretical background necessary to understand the quantum algorithm. We review the SU(3) gauge group, its generators (the Gell-Mann matrices), and the definition of colour factors in QCD. We also introduce the qubit encoding of colour states and discuss the fundamental challenge of implementing non-unitary operations on a quantum computer.
+
+\textbf{Chapter~\ref{ch:algorithm}} presents the Chawdhry--Pellen algorithm in detail. We explain the unitarisation procedure that allows the non-unitary SU(3) generators to be implemented via unitary quantum gates, the role of the ancillary ``unitarisation register,'' and the complete structure of the Q gate representing a quark-gluon vertex.
+
+\textbf{Chapter~\ref{ch:implementation}} describes the \texttt{QC-Amp} software library. We document the module structure, the key classes and functions, and the design decisions made during implementation. Code excerpts are provided to illustrate the correspondence between the mathematical formulation and its software realisation.
+
+\textbf{Chapter~\ref{ch:results}} presents our numerical results. We demonstrate the successful computation of the colour factor $C = 4$ for the quark self-energy diagram and discuss the verification procedure.
+
+\textbf{Chapter~\ref{ch:conclusions}} summarises our findings and outlines directions for future work, including extension to more complex diagrams and deployment on actual quantum hardware.
+
+\textbf{Appendix~\ref{app:matrices}} provides explicit matrix representations of all Gell-Mann and unitary-adjusted matrices used in the implementation.
+
+\textbf{Appendix~\ref{app:software}} contains additional software documentation, including installation instructions and API reference.
+
+\section{Notation and Conventions}
+\label{sec:intro_notation}
+
+We adopt the following conventions throughout this document:
+
+\begin{itemize}
+    \item $\Nc = 3$ denotes the number of colours in QCD.
+    
+    \item Greek indices $\mu, \nu, \ldots$ denote Lorentz indices (spacetime).
+    
+    \item Latin indices $a, b, c, \ldots$ denote adjoint (gluon) colour indices, running from 1 to $\Nc^2 - 1 = 8$.
+    
+    \item Latin indices $i, j, k, \ldots$ denote fundamental (quark) colour indices, running from 1 to $\Nc = 3$.
+    
+    \item $\gellmann{a}$ denotes the $a$-th Gell-Mann matrix ($3 \times 3$).
+    
+    \item $\lhat{a}$ denotes the unitary-adjusted version of $\gellmann{a}$.
+    
+    \item $\generator{a} = \gellmann{a}/2$ denotes the SU(3) generator in the fundamental representation.
+    
+    \item $\structconst{a}{b}{c}$ denotes the SU(3) structure constants.
+    
+    \item We use Dirac notation: $\ket{\psi}$ for state vectors, $\bra{\phi}$ for dual vectors, and $\braket{\phi}{\psi}$ for inner products.
+    
+    \item Quantum registers are denoted by calligraphic letters or descriptive subscripts: e.g., the gluon register $g$, quark register $q$, and unitarisation register $U$.
+    
+    \item We work in natural units where $\hbar = c = 1$.
+\end{itemize}
+
+\section{Acknowledgements}
+\label{sec:intro_acknowledgements}
+
+% PLACEHOLDER: Add acknowledgements
+\textit{[To be completed: Acknowledge supervisors, collaborators, funding sources, computational resources, etc.]}
